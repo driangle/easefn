@@ -2,7 +2,7 @@
 layout: home
 hero:
   name: easefn
-  text: Minimal easing function library
+  text: A simple easing function library
   tagline: Zero-dependency easing functions for smooth animations and transitions
   actions:
     - theme: brand

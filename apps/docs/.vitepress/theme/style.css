@@ -1,62 +1,349 @@
+/* ── 90s Math Notebook Theme ── */
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
 :root {
-  --vp-c-brand-1: #3b82f6;
-  --vp-c-brand-2: #2563eb;
-  --vp-c-brand-3: #1d4ed8;
+  /* ink & paper */
+  --vp-c-brand-1: #1a3a5c;
+  --vp-c-brand-2: #14304e;
+  --vp-c-brand-3: #0e2640;
+  --vp-c-brand-soft: rgba(26, 58, 92, 0.08);
+
+  --ink: #1a2a3a;
+  --ink-light: #2e3e4e;
+  --ink-faint: #6a7a8a;
+  --paper: #f5f0e8;
+  --paper-warm: #ede7db;
+  --paper-line: #c8bfb0;
+  --grid: #d4cdc2;
+  --accent-curve: #2255aa;
+  --accent-dot: #cc3333;
+  --accent-green: #227755;
+
+  /* vitepress overrides */
+  --vp-c-bg: var(--paper);
+  --vp-c-bg-soft: var(--paper-warm);
+  --vp-c-bg-alt: #e8e2d6;
+  --vp-c-border: var(--paper-line);
+  --vp-c-text-1: var(--ink);
+  --vp-c-text-2: var(--ink-light);
+  --vp-c-text-3: var(--ink-faint);
+  --vp-font-family-base: 'EB Garamond', 'Georgia', 'Times New Roman', serif;
+  --vp-font-family-mono: 'IBM Plex Mono', 'Menlo', monospace;
+
+  --vp-home-hero-name-color: var(--ink);
+  --vp-button-brand-bg: var(--ink);
+  --vp-button-brand-hover-bg: var(--ink-light);
+  --vp-button-brand-text: var(--paper);
 }
 
 .dark {
-  --vp-c-brand-1: #60a5fa;
-  --vp-c-brand-2: #3b82f6;
-  --vp-c-brand-3: #2563eb;
+  --vp-c-brand-1: #8ab4e8;
+  --vp-c-brand-2: #6a9ad8;
+  --vp-c-brand-3: #4a80c8;
+  --vp-c-brand-soft: rgba(138, 180, 232, 0.1);
+
+  --ink: #ede5d8;
+  --ink-light: #d0c8bc;
+  --ink-faint: #a09890;
+  --paper: #1a1814;
+  --paper-warm: #22201a;
+  --paper-line: #3a3830;
+  --grid: #2e2c26;
+  --accent-curve: #7aace8;
+  --accent-dot: #e86050;
+  --accent-green: #50b888;
+
+  --vp-c-bg: var(--paper);
+  --vp-c-bg-soft: var(--paper-warm);
+  --vp-c-bg-alt: #1e1c16;
+  --vp-c-text-1: var(--ink);
+  --vp-c-text-2: var(--ink-light);
+  --vp-c-text-3: var(--ink-faint);
+
+  --vp-sidebar-bg-color: var(--paper);
 }
 
+/* ── Global typography ── */
+
+.VPDoc h1,
+.VPDoc h2,
+.VPDoc h3 {
+  font-family: var(--vp-font-family-base);
+  letter-spacing: -0.01em;
+}
+
+.VPDoc h1 {
+  font-weight: 600;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 0.3em;
+}
+
+.VPDoc p,
+.VPDoc li {
+  font-family: var(--vp-font-family-base);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+/* ── Navbar / sidebar overrides ── */
+
+.VPNav,
+.VPSidebar {
+  font-family: var(--vp-font-family-base) !important;
+}
+
+.VPSidebar .VPSidebarItem .link {
+  color: var(--ink) !important;
+  font-size: 0.95rem !important;
+}
+
+.VPSidebar .VPSidebarItem .text {
+  color: var(--ink) !important;
+  font-size: 0.95rem !important;
+}
+
+.dark .VPSidebar .VPSidebarItem .link {
+  color: #ede5d8 !important;
+}
+
+.dark .VPSidebar .VPSidebarItem .text {
+  color: #ede5d8 !important;
+}
+
+.VPSidebar .VPSidebarItem.is-active .link {
+  color: var(--accent-curve) !important;
+}
+
+.VPNavBarTitle .title {
+  font-family: var(--vp-font-family-mono) !important;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ── Home page ── */
+
+.VPHero .name {
+  font-family: var(--vp-font-family-mono) !important;
+  font-weight: 500 !important;
+}
+
+.VPHero .text {
+  font-family: var(--vp-font-family-base) !important;
+  font-style: italic;
+}
+
+.VPHero .tagline {
+  font-family: var(--vp-font-family-base) !important;
+}
+
+.VPFeature .title {
+  font-family: var(--vp-font-family-mono) !important;
+  font-size: 0.9rem !important;
+}
+
+.VPFeature .details {
+  font-family: var(--vp-font-family-base) !important;
+}
+
+/* ── Easing page components ── */
+
 .easing-section {
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .easing-section h3 {
   font-family: var(--vp-font-family-mono);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  font-weight: 500;
   margin-bottom: 0.75rem;
+  color: var(--ink-light);
+  letter-spacing: 0.03em;
 }
 
 .demo-row {
   display: flex;
-  gap: 1.5rem;
+  gap: 1.25rem;
   align-items: flex-start;
   flex-wrap: wrap;
 }
 
-.demo-row > * {
-  flex: 1;
-  min-width: 200px;
+.demo-row > .curve-container {
+  flex: 0 0 auto;
 }
+
+.demo-row > :not(.curve-container) {
+  flex: 1;
+  min-width: 160px;
+}
+
+/* ── Play / Reset buttons ── */
 
 .playback-controls {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  align-items: center;
   margin-bottom: 1.5rem;
   position: sticky;
   top: var(--vp-nav-height, 64px);
   z-index: 10;
-  background: var(--vp-c-bg);
+  background: var(--paper);
   padding: 0.75rem 0;
 }
 
-.playback-controls button {
-  padding: 0.4rem 1rem;
-  border: 1px solid var(--vp-c-border);
-  border-radius: 6px;
-  background: var(--vp-c-bg-soft);
-  color: var(--vp-c-text-1);
+.play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  color: var(--ink);
   cursor: pointer;
-  font-size: 0.85rem;
-  transition: border-color 0.2s;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.playback-controls button:hover {
-  border-color: var(--vp-c-brand-1);
+.play-btn:not(:disabled):hover {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 0 3px var(--paper),
+    0 0 0 5px var(--accent-curve);
 }
+
+.play-btn:not(:disabled):active {
+  transform: scale(0.96);
+}
+
+.play-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.play-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--ink);
+  margin-left: 2px;
+}
+
+/* pulse ring when idle */
+.play-btn:not(:disabled)::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-curve);
+  opacity: 0;
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.95);
+  }
+  70% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+.reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  border: 1.5px solid var(--paper-line);
+  border-radius: 4px;
+  background: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  font-family: var(--vp-font-family-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.reset-btn:hover {
+  color: var(--ink);
+  border-color: var(--ink-light);
+}
+
+.reset-btn svg {
+  width: 12px;
+  height: 12px;
+  stroke: currentColor;
+  fill: none;
+}
+
+/* ── Curve container (graph paper) ── */
+
+.curve-container {
+  border: 1.5px solid var(--paper-line);
+  border-radius: 2px;
+  padding: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 19px,
+      var(--grid) 19px,
+      var(--grid) 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 19px,
+      var(--grid) 19px,
+      var(--grid) 20px
+    ),
+    var(--paper);
+  background-size: 20px 20px;
+  display: inline-block;
+  line-height: 0;
+}
+
+/* ── Motion track ── */
+
+.motion-track {
+  position: relative;
+  height: 36px;
+  background: var(--paper-warm);
+  border: 1.5px solid var(--paper-line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.motion-ball {
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent-dot);
+  border: 1.5px solid color-mix(in srgb, var(--accent-dot) 70%, black);
+  transform: translate(-50%, -50%);
+  transition: none;
+}
+
+/* ── Color swatch ── */
+
+.color-swatch {
+  height: 36px;
+  border-radius: 2px;
+  border: 1.5px solid var(--paper-line);
+  transition: none;
+}
+
+/* ── Param slider ── */
 
 .param-slider {
   display: flex;
@@ -67,27 +354,32 @@
 
 .param-slider label {
   font-family: var(--vp-font-family-mono);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   min-width: 80px;
+  color: var(--ink-light);
 }
 
 .param-slider input[type='range'] {
   flex: 1;
-  max-width: 200px;
+  max-width: 180px;
+  accent-color: var(--accent-curve);
 }
 
 .param-slider .value {
   font-family: var(--vp-font-family-mono);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   min-width: 50px;
   text-align: right;
+  color: var(--ink-light);
 }
+
+/* ── Sticky controls (factory pages) ── */
 
 .sticky-controls {
   position: sticky;
   top: var(--vp-nav-height, 64px);
   z-index: 10;
-  background: var(--vp-c-bg);
+  background: var(--paper);
   padding: 0.75rem 0;
 }
 
@@ -98,43 +390,27 @@
 }
 
 .params-panel {
-  padding: 1rem;
-  border: 1px solid var(--vp-c-border);
-  border-radius: 8px;
-  background: var(--vp-c-bg-soft);
-  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--paper-line);
+  border-radius: 2px;
+  background: var(--paper-warm);
+  margin-bottom: 0.75rem;
 }
 
-.curve-container {
-  border: 1px solid var(--vp-c-border);
-  border-radius: 8px;
-  padding: 0.5rem;
-  background: var(--vp-c-bg-soft);
+/* ── Code blocks ── */
+
+.VPDoc div[class*='language-'] {
+  border-radius: 2px;
+  border: 1.5px solid var(--paper-line);
 }
 
-.motion-track {
-  position: relative;
-  height: 40px;
-  background: var(--vp-c-bg-soft);
-  border: 1px solid var(--vp-c-border);
-  border-radius: 8px;
-  overflow: hidden;
+/* ── Scrollbar ── */
+
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-.motion-ball {
-  position: absolute;
-  top: 50%;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--vp-c-brand-1);
-  transform: translate(-50%, -50%);
-  transition: none;
-}
-
-.color-swatch {
-  height: 40px;
-  border-radius: 8px;
-  border: 1px solid var(--vp-c-border);
-  transition: none;
+::-webkit-scrollbar-thumb {
+  background: var(--paper-line);
+  border-radius: 3px;
 }

@@ -3,7 +3,7 @@ import path from 'node:path'
 
 export default defineConfig({
   title: 'easefn',
-  description: 'Minimal easing function library',
+  description: 'A simple easing function library',
 
   vite: {
     resolve: {

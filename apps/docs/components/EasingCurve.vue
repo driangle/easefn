@@ -10,10 +10,10 @@ const props = withDefaults(
     height?: number
     samples?: number
   }>(),
-  { width: 240, height: 180, samples: 200 },
+  { width: 200, height: 180, samples: 200 },
 )
 
-const padding = 20
+const padding = { top: 16, right: 12, bottom: 16, left: 16 }
 
 const points = computed(() => {
   const pts: { x: number; y: number; rawY: number }[] = []
@@ -36,14 +36,17 @@ const yRange = computed(() => {
   return { min: min - pad, max: max + pad }
 })
 
+const plotW = computed(() => props.width - padding.left - padding.right)
+const plotH = computed(() => props.height - padding.top - padding.bottom)
+
 function toSvgX(t: number) {
-  return padding + t * (props.width - 2 * padding)
+  return padding.left + t * plotW.value
 }
 
 function toSvgY(v: number) {
   const { min, max } = yRange.value
   const norm = (v - min) / (max - min)
-  return props.height - padding - norm * (props.height - 2 * padding)
+  return padding.top + (1 - norm) * plotH.value
 }
 
 const polylinePoints = computed(() =>
@@ -55,36 +58,47 @@ const tracerY = computed(() => toSvgY(props.easeFn(props.progress)))
 
 const zeroY = computed(() => toSvgY(0))
 const oneY = computed(() => toSvgY(1))
+
+/* axis labels */
+const labelX0 = computed(() => padding.left - 2)
+const labelX1 = computed(() => padding.left - 2)
 </script>
 
 <template>
   <div class="curve-container">
     <svg :width="width" :height="height" :viewBox="`0 0 ${width} ${height}`">
+      <!-- y-axis labels -->
+      <text :x="labelX0" :y="zeroY + 1" text-anchor="end" class="axis-label">0</text>
+      <text :x="labelX1" :y="oneY + 1" text-anchor="end" class="axis-label">1</text>
+
+      <!-- reference lines -->
+      <line
+        :x1="padding.left" :y1="zeroY" :x2="padding.left + plotW" :y2="zeroY"
+        class="ref-line"
+      />
+      <line
+        :x1="padding.left" :y1="oneY" :x2="padding.left + plotW" :y2="oneY"
+        class="ref-line"
+      />
+
       <!-- axes -->
       <line
-        :x1="padding" :y1="zeroY" :x2="width - padding" :y2="zeroY"
-        stroke="var(--vp-c-border)" stroke-width="1" stroke-dasharray="4,3"
+        :x1="padding.left" :y1="padding.top" :x2="padding.left" :y2="padding.top + plotH"
+        class="axis-line"
       />
       <line
-        :x1="padding" :y1="oneY" :x2="width - padding" :y2="oneY"
-        stroke="var(--vp-c-border)" stroke-width="1" stroke-dasharray="4,3"
-      />
-      <line
-        :x1="padding" :y1="padding" :x2="padding" :y2="height - padding"
-        stroke="var(--vp-c-border)" stroke-width="1"
-      />
-      <line
-        :x1="padding" :y1="height - padding" :x2="width - padding" :y2="height - padding"
-        stroke="var(--vp-c-border)" stroke-width="1"
+        :x1="padding.left" :y1="padding.top + plotH" :x2="padding.left + plotW" :y2="padding.top + plotH"
+        class="axis-line"
       />
 
       <!-- curve -->
       <polyline
         :points="polylinePoints"
         fill="none"
-        stroke="var(--vp-c-brand-1)"
+        stroke="var(--accent-curve)"
         stroke-width="2"
         stroke-linejoin="round"
+        stroke-linecap="round"
       />
 
       <!-- tracer dot -->
@@ -93,8 +107,28 @@ const oneY = computed(() => toSvgY(1))
         :cx="tracerX"
         :cy="tracerY"
         r="4"
-        fill="var(--vp-c-brand-1)"
+        fill="var(--accent-dot)"
       />
     </svg>
   </div>
 </template>
+
+<style scoped>
+.ref-line {
+  stroke: var(--paper-line);
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+.axis-line {
+  stroke: var(--ink-faint);
+  stroke-width: 1;
+}
+
+.axis-label {
+  font-family: var(--vp-font-family-mono);
+  font-size: 9px;
+  fill: var(--ink-faint);
+  dominant-baseline: middle;
+}
+</style>
