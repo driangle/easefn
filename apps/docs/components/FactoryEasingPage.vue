@@ -1,0 +1,76 @@
+<script setup lang="ts">
+import { ref, computed, type Ref } from 'vue'
+import type { EaseFn } from 'easefn'
+import { usePlayback } from '../composables/usePlayback'
+import EasingCurve from './EasingCurve.vue'
+import MotionDemo from './MotionDemo.vue'
+import ColorDemo from './ColorDemo.vue'
+import PlaybackControls from './PlaybackControls.vue'
+import ParamSlider from './ParamSlider.vue'
+
+interface ParamDef {
+  name: string
+  default: number
+  min: number
+  max: number
+  step: number
+}
+
+const props = defineProps<{
+  variants: Array<{ name: string; factory: (params: Record<string, number>) => EaseFn }>
+  params: ParamDef[]
+}>()
+
+const { progress, isPlaying, play, reset } = usePlayback()
+
+const paramValues: Record<string, Ref<number>> = {}
+for (const p of props.params) {
+  paramValues[p.name] = ref(p.default)
+}
+
+const currentParams = computed(() => {
+  const result: Record<string, number> = {}
+  for (const key in paramValues) {
+    result[key] = paramValues[key].value
+  }
+  return result
+})
+
+const easings = computed(() =>
+  props.variants.map((v) => ({
+    name: v.name,
+    fn: v.factory(currentParams.value),
+  })),
+)
+</script>
+
+<template>
+  <div class="sticky-controls">
+    <div class="params-panel">
+      <ParamSlider
+        v-for="p in params"
+        :key="p.name"
+        :label="p.name"
+        :model-value="paramValues[p.name].value"
+        :min="p.min"
+        :max="p.max"
+        :step="p.step"
+        @update:model-value="paramValues[p.name].value = $event"
+      />
+    </div>
+
+    <PlaybackControls :is-playing="isPlaying" @play="play" @reset="reset" />
+  </div>
+
+  <div v-for="easing in easings" :key="easing.name" class="easing-section">
+    <h3>{{ easing.name }}</h3>
+    <div class="demo-row">
+      <EasingCurve :ease-fn="easing.fn" :progress="progress" />
+      <div>
+        <MotionDemo :ease-fn="easing.fn" :progress="progress" />
+        <div style="height: 0.75rem" />
+        <ColorDemo :ease-fn="easing.fn" :progress="progress" />
+      </div>
+    </div>
+  </div>
+</template>
