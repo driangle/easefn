@@ -1,7 +1,7 @@
 ---
 title: "Set up TypeScript build and verify package structure"
 id: "001"
-status: pending
+status: completed
 priority: critical
 type: chore
 tags: ["typescript", "infrastructure", "phase:1-foundation"]
@@ -16,11 +16,11 @@ Ensure the TypeScript package builds cleanly, produces correct output in dist/, 
 
 ## Tasks
 
-- [ ] Run npm install in ts/
-- [ ] Run tsc and verify dist/ output contains index.js and index.d.ts
-- [ ] Verify the EaseFn type is exported in the .d.ts
-- [ ] Add a .gitignore for node_modules/ and dist/
-- [ ] Verify package.json exports, main, and types fields resolve correctly
+- [x] Run npm install in ts/
+- [x] Run tsc and verify dist/ output contains index.js and index.d.ts
+- [x] Verify the EaseFn type is exported in the .d.ts
+- [x] Add a .gitignore for node_modules/ and dist/
+- [x] Verify package.json exports, main, and types fields resolve correctly
 
 ## Acceptance Criteria
 
