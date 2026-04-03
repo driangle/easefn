@@ -57,3 +57,131 @@ export const easeInOutCirc: EaseFn = (t) =>
   t < 0.5
     ? (1 - Math.sqrt(1 - 4 * t * t)) / 2
     : (Math.sqrt(1 - (-2 * t + 2) ** 2) + 1) / 2;
+
+// --- Polynomial (configurable power, generalizes Quad/Cubic) ---
+
+export const easeInPoly =
+  (n: number): EaseFn =>
+  (t) =>
+    t ** n;
+
+export const easeOutPoly =
+  (n: number): EaseFn =>
+  (t) =>
+    1 - (1 - t) ** n;
+
+export const easeInOutPoly =
+  (n: number): EaseFn =>
+  (t) =>
+    t < 0.5 ? 2 ** (n - 1) * t ** n : 1 - (-2 * t + 2) ** n / 2;
+
+// --- Exponential (configurable exponent) ---
+
+export const makeEaseInExpo =
+  (exponent: number): EaseFn =>
+  (t) =>
+    t === 0 ? 0 : Math.pow(2, exponent * (t - 1));
+
+export const makeEaseOutExpo =
+  (exponent: number): EaseFn =>
+  (t) =>
+    t === 1 ? 1 : 1 - Math.pow(2, -exponent * t);
+
+export const makeEaseInOutExpo =
+  (exponent: number): EaseFn =>
+  (t) => {
+    if (t === 0) return 0;
+    if (t === 1) return 1;
+    return t < 0.5
+      ? Math.pow(2, 2 * exponent * t - exponent) / 2
+      : (2 - Math.pow(2, -2 * exponent * t + exponent)) / 2;
+  };
+
+// --- Back (configurable overshoot) ---
+
+const DEFAULT_OVERSHOOT = 1.70158;
+
+export const easeInBack =
+  (overshoot = DEFAULT_OVERSHOOT): EaseFn =>
+  (t) =>
+    t * t * ((overshoot + 1) * t - overshoot);
+
+export const easeOutBack =
+  (overshoot = DEFAULT_OVERSHOOT): EaseFn =>
+  (t) => {
+    t = t - 1;
+    return t * t * ((overshoot + 1) * t + overshoot) + 1;
+  };
+
+export const easeInOutBack =
+  (overshoot = DEFAULT_OVERSHOOT): EaseFn =>
+  (t) => {
+    const s = overshoot * 1.525;
+    if (t < 0.5) {
+      return (2 * t) ** 2 * ((s + 1) * 2 * t - s) / 2;
+    }
+    const u = 2 * t - 2;
+    return (u * u * ((s + 1) * u + s) + 2) / 2;
+  };
+
+// --- Elastic (configurable amplitude and period) ---
+
+export const easeInElastic = ({
+  amplitude = 1,
+  period = 0.3,
+}: { amplitude?: number; period?: number } = {}): EaseFn => {
+  const a = Math.max(amplitude, 1);
+  const s = (period / (2 * Math.PI)) * Math.asin(1 / a);
+  return (t) => {
+    if (t === 0) return 0;
+    if (t === 1) return 1;
+    return -(a * Math.pow(2, 10 * (t - 1)) * Math.sin(((t - 1 - s) * 2 * Math.PI) / period));
+  };
+};
+
+export const easeOutElastic = ({
+  amplitude = 1,
+  period = 0.3,
+}: { amplitude?: number; period?: number } = {}): EaseFn => {
+  const a = Math.max(amplitude, 1);
+  const s = (period / (2 * Math.PI)) * Math.asin(1 / a);
+  return (t) => {
+    if (t === 0) return 0;
+    if (t === 1) return 1;
+    return a * Math.pow(2, -10 * t) * Math.sin(((t - s) * 2 * Math.PI) / period) + 1;
+  };
+};
+
+export const easeInOutElastic = ({
+  amplitude = 1,
+  period = 0.45,
+}: { amplitude?: number; period?: number } = {}): EaseFn => {
+  const a = Math.max(amplitude, 1);
+  const s = (period / (2 * Math.PI)) * Math.asin(1 / a);
+  return (t) => {
+    if (t === 0) return 0;
+    if (t === 1) return 1;
+    if (t < 0.5) {
+      return -(a * Math.pow(2, 20 * t - 10) * Math.sin(((20 * t - 10 - 2 * s) * Math.PI) / period)) / 2;
+    }
+    return (a * Math.pow(2, -20 * t + 10) * Math.sin(((20 * t - 10 - 2 * s) * Math.PI) / period)) / 2 + 1;
+  };
+};
+
+// --- Bounce ---
+
+export const easeOutBounce: EaseFn = (t) => {
+  const n1 = 7.5625;
+  const d1 = 2.75;
+  if (t < 1 / d1) return n1 * t * t;
+  if (t < 2 / d1) return n1 * (t -= 1.5 / d1) * t + 0.75;
+  if (t < 2.5 / d1) return n1 * (t -= 2.25 / d1) * t + 0.9375;
+  return n1 * (t -= 2.625 / d1) * t + 0.984375;
+};
+
+export const easeInBounce: EaseFn = (t) => 1 - easeOutBounce(1 - t);
+
+export const easeInOutBounce: EaseFn = (t) =>
+  t < 0.5
+    ? (1 - easeOutBounce(1 - 2 * t)) / 2
+    : (1 + easeOutBounce(2 * t - 1)) / 2;
