@@ -14,9 +14,25 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/driangle/easefn.git",
+    "directory": "ts"
+  },
+  "homepage": "https://driangle.github.io/easefn/",
+  "keywords": [
+    "easing",
+    "animation",
+    "interpolation",
+    "tweening",
+    "ease-in",
+    "ease-out",
+    "bezier"
+  ],
   "scripts": {
     "build": "tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "prepack": "cp ../LICENSE ."
   },
   "devDependencies": {
     "typescript": "^5.5.0",
