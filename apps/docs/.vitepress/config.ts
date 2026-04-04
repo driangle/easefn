@@ -20,6 +20,10 @@ export default defineConfig({
       { text: 'Easings', link: '/easings/' },
     ],
 
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/driangle/easefn' },
+    ],
+
     sidebar: [
       {
         text: 'Guide',

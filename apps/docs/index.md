@@ -13,7 +13,7 @@ hero:
       link: /easings/linear
 features:
   - title: Lightweight
-    details: "~2.5 KB minified / ~750 B gzipped. Zero runtime dependencies. Tree-shakeable ESM exports."
+    details: "~2.4 KB minified / ~890 B gzipped. Zero runtime dependencies. Tree-shakeable ESM exports."
   - title: Type-safe
     details: Full TypeScript support with a simple EaseFn type signature.
   - title: Configurable

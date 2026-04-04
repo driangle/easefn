@@ -4,8 +4,8 @@
 
 | | Size |
 |---|---|
-| Minified | ~2.5 KB |
-| Minified + gzip | ~750 B |
+| Minified | ~2.4 KB |
+| Minified + gzip | ~890 B |
 
 ## Installation
 
