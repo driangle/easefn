@@ -32,9 +32,11 @@
   "scripts": {
     "build": "tsc",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "prepack": "cp ../LICENSE ."
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.2",
     "typescript": "^5.5.0",
     "vitest": "^4.1.2"
   },

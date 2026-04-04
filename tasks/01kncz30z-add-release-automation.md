@@ -1,7 +1,7 @@
 ---
 title: "Add release automation"
 id: "01kncz30z"
-status: pending
+status: completed
 priority: medium
 type: feature
 tags: ["ci", "release"]

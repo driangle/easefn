@@ -1,7 +1,7 @@
 ---
 title: "Add test coverage report with README badge"
 id: "01kncz95v"
-status: pending
+status: completed
 priority: medium
 type: feature
 tags: ["ci", "testing"]
@@ -16,10 +16,10 @@ Add test coverage reporting to the CI pipeline and display the coverage percenta
 
 ## Tasks
 
-- [ ] Configure vitest to generate a coverage report (e.g. via `@vitest/coverage-v8`)
-- [ ] Add a coverage step to the CI workflow (`.github/workflows/ci.yml`)
-- [ ] Upload coverage data to a badge service (e.g. Codecov or Coveralls)
-- [ ] Add a coverage badge to `README.md` showing the current coverage percentage
+- [x] Configure vitest to generate a coverage report (e.g. via `@vitest/coverage-v8`)
+- [x] Add a coverage step to the CI workflow (`.github/workflows/ci.yml`)
+- [x] Upload coverage data to a badge service (e.g. Codecov or Coveralls)
+- [x] Add a coverage badge to `README.md` showing the current coverage percentage
 
 ## Acceptance Criteria
 

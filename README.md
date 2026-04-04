@@ -1,5 +1,8 @@
 # easefn
 
+[![CI](https://github.com/driangle/easefn/actions/workflows/ci.yml/badge.svg)](https://github.com/driangle/easefn/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/driangle/easefn/graph/badge.svg)](https://codecov.io/gh/driangle/easefn)
+
 A minimal easing function library. One interface, many curves.
 
 ```ts

@@ -26,5 +26,17 @@ jobs:
       - name: Test
         run: make test
 
+      - name: Coverage
+        run: cd ts && npx vitest run --coverage
+
+      - name: Upload coverage to Codecov
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ts/coverage
+          flags: typescript
+          fail_ci_if_error: false
+
       - name: Build
         run: make build
