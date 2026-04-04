@@ -176,6 +176,115 @@ export const easeInElastic: EaseFn = makeEaseInElastic();
 export const easeOutElastic: EaseFn = makeEaseOutElastic();
 export const easeInOutElastic: EaseFn = makeEaseInOutElastic();
 
+// --- Cubic Bezier (CSS cubic-bezier() compatible) ---
+
+const BEZIER_NEWTON_ITERATIONS = 4;
+const BEZIER_NEWTON_MIN_SLOPE = 0.001;
+const BEZIER_SUBDIVISION_PRECISION = 1e-7;
+const BEZIER_SUBDIVISION_MAX_ITERATIONS = 10;
+
+function sampleCurveX(ax: number, bx: number, cx: number, t: number): number {
+  return ((ax * t + bx) * t + cx) * t;
+}
+
+function sampleCurveY(ay: number, by: number, cy: number, t: number): number {
+  return ((ay * t + by) * t + cy) * t;
+}
+
+function sampleCurveDerivativeX(ax: number, bx: number, cx: number, t: number): number {
+  return (3 * ax * t + 2 * bx) * t + cx;
+}
+
+function solveCurveX(ax: number, bx: number, cx: number, x: number): number {
+  // Newton-Raphson
+  let t = x;
+  for (let i = 0; i < BEZIER_NEWTON_ITERATIONS; i++) {
+    const slope = sampleCurveDerivativeX(ax, bx, cx, t);
+    if (Math.abs(slope) < BEZIER_NEWTON_MIN_SLOPE) break;
+    const currentX = sampleCurveX(ax, bx, cx, t) - x;
+    t -= currentX / slope;
+  }
+
+  // If Newton didn't converge, fall back to binary search
+  if (t < 0 || t > 1) t = x;
+
+  let lo = 0;
+  let hi = 1;
+  t = x;
+
+  for (let i = 0; i < BEZIER_SUBDIVISION_MAX_ITERATIONS; i++) {
+    const currentX = sampleCurveX(ax, bx, cx, t) - x;
+    if (Math.abs(currentX) < BEZIER_SUBDIVISION_PRECISION) return t;
+    if (currentX > 0) {
+      hi = t;
+    } else {
+      lo = t;
+    }
+    t = (lo + hi) / 2;
+  }
+
+  return t;
+}
+
+export const makeCubicBezier = ({
+  x1,
+  y1,
+  x2,
+  y2,
+}: {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}): EaseFn => {
+  // Clamp x values to [0, 1] per CSS spec
+  const cx1 = Math.min(1, Math.max(0, x1));
+  const cx2 = Math.min(1, Math.max(0, x2));
+
+  // Pre-compute polynomial coefficients
+  const cx = 3 * cx1;
+  const bx = 3 * (cx2 - cx1) - cx;
+  const ax = 1 - cx - bx;
+
+  const cy = 3 * y1;
+  const by = 3 * (y2 - y1) - cy;
+  const ay = 1 - cy - by;
+
+  return (t) => {
+    if (t <= 0) return 0;
+    if (t >= 1) return 1;
+    return sampleCurveY(ay, by, cy, solveCurveX(ax, bx, cx, t));
+  };
+};
+
+// --- Steps (CSS steps() compatible) ---
+
+export type StepPosition = 'jump-start' | 'jump-end' | 'jump-both' | 'jump-none';
+
+export const makeSteps = ({
+  n,
+  position = 'jump-end',
+}: {
+  n: number;
+  position?: StepPosition;
+}): EaseFn => {
+  return (t) => {
+    if (t <= 0) return 0;
+    if (t >= 1) return 1;
+
+    switch (position) {
+      case 'jump-start':
+        return Math.ceil(t * n) / n;
+      case 'jump-end':
+        return Math.floor(t * n) / n;
+      case 'jump-both':
+        return Math.ceil(t * n) / (n + 1);
+      case 'jump-none':
+        return Math.floor(t * n) / (n - 1);
+    }
+  };
+};
+
 // --- Bounce ---
 
 export const easeOutBounce: EaseFn = (t) => {

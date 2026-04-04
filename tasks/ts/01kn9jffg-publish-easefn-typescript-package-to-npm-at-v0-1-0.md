@@ -1,7 +1,7 @@
 ---
 title: "Publish easefn TypeScript package to npm at v0.1.0"
 id: "01kn9jffg"
-status: pending
+status: completed
 priority: medium
 type: chore
 tags: ["typescript", "publishing", "phase:2-release"]

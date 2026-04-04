@@ -49,6 +49,8 @@ export default defineConfig({
           { text: 'Exponential (factory)', link: '/easings/expo-factory' },
           { text: 'Back', link: '/easings/back' },
           { text: 'Elastic', link: '/easings/elastic' },
+          { text: 'Cubic Bezier', link: '/easings/cubic-bezier' },
+          { text: 'Steps', link: '/easings/steps' },
         ],
       },
     ],

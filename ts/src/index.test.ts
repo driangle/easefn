@@ -278,6 +278,185 @@ describe("makeEaseInOutBack", () => {
   });
 });
 
+describe("makeCubicBezier", () => {
+  it("f(0) = 0 and f(1) = 1", () => {
+    const fn = easefn.makeCubicBezier({ x1: 0.25, y1: 0.1, x2: 0.25, y2: 1.0 });
+    expect(fn(0)).toBeCloseTo(0);
+    expect(fn(1)).toBeCloseTo(1);
+  });
+
+  it("matches CSS ease (0.25, 0.1, 0.25, 1.0) characteristics", () => {
+    const ease = easefn.makeCubicBezier({ x1: 0.25, y1: 0.1, x2: 0.25, y2: 1.0 });
+    // CSS ease starts slow, accelerates, then decelerates
+    expect(ease(0.25)).toBeGreaterThan(0.3);
+    expect(ease(0.25)).toBeLessThan(0.5);
+    expect(ease(0.5)).toBeGreaterThan(0.7);
+    expect(ease(0.75)).toBeGreaterThan(0.9);
+  });
+
+  it("CSS ease-in (0.42, 0, 1, 1)", () => {
+    const fn = easefn.makeCubicBezier({ x1: 0.42, y1: 0, x2: 1, y2: 1 });
+    expect(fn(0)).toBeCloseTo(0);
+    expect(fn(1)).toBeCloseTo(1);
+    // ease-in should be below linear at midpoint
+    expect(fn(0.5)).toBeLessThan(0.5);
+  });
+
+  it("CSS ease-out (0, 0, 0.58, 1)", () => {
+    const fn = easefn.makeCubicBezier({ x1: 0, y1: 0, x2: 0.58, y2: 1 });
+    expect(fn(0)).toBeCloseTo(0);
+    expect(fn(1)).toBeCloseTo(1);
+    // ease-out should be above linear at midpoint
+    expect(fn(0.5)).toBeGreaterThan(0.5);
+  });
+
+  it("CSS ease-in-out (0.42, 0, 0.58, 1)", () => {
+    const fn = easefn.makeCubicBezier({ x1: 0.42, y1: 0, x2: 0.58, y2: 1 });
+    expect(fn(0)).toBeCloseTo(0);
+    expect(fn(0.5)).toBeCloseTo(0.5, 2);
+    expect(fn(1)).toBeCloseTo(1);
+  });
+
+  it("linear bezier (0, 0, 1, 1) approximates identity", () => {
+    const fn = easefn.makeCubicBezier({ x1: 0, y1: 0, x2: 1, y2: 1 });
+    for (const t of [0, 0.1, 0.25, 0.5, 0.75, 0.9, 1]) {
+      expect(fn(t)).toBeCloseTo(t, 2);
+    }
+  });
+
+  it("is monotonically non-decreasing for valid x values", () => {
+    const fn = easefn.makeCubicBezier({ x1: 0.25, y1: 0.1, x2: 0.25, y2: 1.0 });
+    const points = Array.from({ length: 101 }, (_, i) => i / 100);
+    const values = points.map((t) => fn(t));
+    for (let i = 1; i < values.length; i++) {
+      expect(values[i]).toBeGreaterThanOrEqual(values[i - 1] - 1e-10);
+    }
+  });
+
+  it("clamps x1 and x2 to [0, 1]", () => {
+    const fn = easefn.makeCubicBezier({ x1: -0.5, y1: 0.5, x2: 1.5, y2: 0.5 });
+    // Should still produce valid output (clamped to 0, 0.5, 1, 0.5)
+    expect(fn(0)).toBeCloseTo(0);
+    expect(fn(1)).toBeCloseTo(1);
+  });
+
+  it("allows y values outside [0, 1] (overshoot)", () => {
+    const fn = easefn.makeCubicBezier({ x1: 0.5, y1: -0.5, x2: 0.5, y2: 1.5 });
+    expect(fn(0)).toBeCloseTo(0);
+    expect(fn(1)).toBeCloseTo(1);
+    // y values outside [0,1] means output can overshoot
+  });
+
+  it("different control points produce different curves", () => {
+    const a = easefn.makeCubicBezier({ x1: 0.25, y1: 0.1, x2: 0.25, y2: 1.0 });
+    const b = easefn.makeCubicBezier({ x1: 0.42, y1: 0, x2: 0.58, y2: 1 });
+    expect(a(0.5)).not.toBeCloseTo(b(0.5), 2);
+  });
+});
+
+describe("makeSteps", () => {
+  describe("jump-end (default)", () => {
+    it("f(0) = 0 and f(1) = 1", () => {
+      const fn = easefn.makeSteps({ n: 4 });
+      expect(fn(0)).toBe(0);
+      expect(fn(1)).toBe(1);
+    });
+
+    it("makeSteps(1) behaves like CSS step-end (0 until t=1)", () => {
+      const fn = easefn.makeSteps({ n: 1, position: "jump-end" });
+      expect(fn(0)).toBe(0);
+      expect(fn(0.25)).toBe(0);
+      expect(fn(0.5)).toBe(0);
+      expect(fn(0.99)).toBe(0);
+      expect(fn(1)).toBe(1);
+    });
+
+    it("produces n distinct output levels", () => {
+      const fn = easefn.makeSteps({ n: 4 });
+      const values = new Set(
+        [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1].map((t) => fn(t)),
+      );
+      // 4 steps jump-end: levels are 0, 0.25, 0.5, 0.75, plus 1 at t=1
+      expect(values.size).toBe(5);
+    });
+
+    it("holds constant within each step interval", () => {
+      const fn = easefn.makeSteps({ n: 4 });
+      // First interval [0, 0.25): all should be 0
+      expect(fn(0.1)).toBe(0);
+      expect(fn(0.2)).toBe(0);
+      // Second interval [0.25, 0.5): all should be 0.25
+      expect(fn(0.25)).toBe(0.25);
+      expect(fn(0.3)).toBe(0.25);
+    });
+  });
+
+  describe("jump-start", () => {
+    it("f(0) = 0 and f(1) = 1", () => {
+      const fn = easefn.makeSteps({ n: 4, position: "jump-start" });
+      expect(fn(0)).toBe(0);
+      expect(fn(1)).toBe(1);
+    });
+
+    it("makeSteps(1) behaves like CSS step-start (1 from t>0)", () => {
+      const fn = easefn.makeSteps({ n: 1, position: "jump-start" });
+      expect(fn(0)).toBe(0);
+      expect(fn(0.01)).toBe(1);
+      expect(fn(0.5)).toBe(1);
+      expect(fn(1)).toBe(1);
+    });
+
+    it("jumps immediately after t=0", () => {
+      const fn = easefn.makeSteps({ n: 4, position: "jump-start" });
+      expect(fn(0.01)).toBe(0.25);
+    });
+  });
+
+  describe("jump-both", () => {
+    it("f(0) = 0 and f(1) = 1", () => {
+      const fn = easefn.makeSteps({ n: 3, position: "jump-both" });
+      expect(fn(0)).toBe(0);
+      expect(fn(1)).toBe(1);
+    });
+
+    it("first step jumps above 0, last step below 1", () => {
+      const fn = easefn.makeSteps({ n: 3, position: "jump-both" });
+      // n=3, n+1=4 levels: 0, 1/4, 2/4, 3/4, 1
+      expect(fn(0.01)).toBe(0.25);
+      expect(fn(0.99)).toBe(0.75);
+    });
+  });
+
+  describe("jump-none", () => {
+    it("f(0) = 0 and f(1) = 1", () => {
+      const fn = easefn.makeSteps({ n: 4, position: "jump-none" });
+      expect(fn(0)).toBe(0);
+      expect(fn(1)).toBe(1);
+    });
+
+    it("stays at 0 initially and reaches 1 before end", () => {
+      const fn = easefn.makeSteps({ n: 4, position: "jump-none" });
+      // n=4, n-1=3 risers: levels 0, 1/3, 2/3, 1
+      expect(fn(0.1)).toBeCloseTo(0);
+      expect(fn(0.8)).toBeCloseTo(1);
+    });
+
+    it("has correct intermediate levels", () => {
+      const fn = easefn.makeSteps({ n: 4, position: "jump-none" });
+      // interval [0.25, 0.5): floor(t*4)=1, 1/3
+      expect(fn(0.3)).toBeCloseTo(1 / 3);
+      // interval [0.5, 0.75): floor(t*4)=2, 2/3
+      expect(fn(0.6)).toBeCloseTo(2 / 3);
+    });
+  });
+
+  it("different step counts produce different curves", () => {
+    const s3 = easefn.makeSteps({ n: 3 });
+    const s5 = easefn.makeSteps({ n: 5 });
+    expect(s3(0.4)).not.toBe(s5(0.4));
+  });
+});
+
 describe("makeEaseInElastic", () => {
   it("default matches easeInElastic", () => {
     const fn = easefn.makeEaseInElastic();

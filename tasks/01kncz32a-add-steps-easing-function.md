@@ -1,7 +1,7 @@
 ---
 title: "Add steps easing function"
 id: "01kncz32a"
-status: pending
+status: completed
 priority: low
 type: feature
 tags: ["easing", "api"]
@@ -16,11 +16,11 @@ Add a `makeSteps(n, position?)` factory function that returns an `EaseFn` produc
 
 ## Tasks
 
-- [ ] Implement `makeSteps(n: number, position?: 'jump-start' | 'jump-end' | 'jump-both' | 'jump-none'): EaseFn`
-- [ ] Default `position` to `'jump-end'` (matches CSS default / `step-end`)
-- [ ] Add tests: boundary conditions, correct number of steps, all four position variants
-- [ ] Add documentation page with interactive step count slider
-- [ ] Export from `index.ts`
+- [x] Implement `makeSteps(n: number, position?: 'jump-start' | 'jump-end' | 'jump-both' | 'jump-none'): EaseFn`
+- [x] Default `position` to `'jump-end'` (matches CSS default / `step-end`)
+- [x] Add tests: boundary conditions, correct number of steps, all four position variants
+- [x] Add documentation page with interactive step count slider
+- [x] Export from `index.ts`
 
 ## Acceptance Criteria
 

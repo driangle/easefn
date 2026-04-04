@@ -1,7 +1,7 @@
 ---
 title: "Add cubicBezier factory function"
 id: "01kncz31v"
-status: pending
+status: completed
 priority: medium
 type: feature
 tags: ["easing", "api"]
@@ -16,11 +16,11 @@ Add a `makeCubicBezier(x1, y1, x2, y2)` factory function that returns an `EaseFn
 
 ## Tasks
 
-- [ ] Implement `makeCubicBezier(x1, y1, x2, y2): EaseFn` using Newton-Raphson or binary search to solve the bezier curve for a given `t`
-- [ ] Validate that `x1` and `x2` are clamped to `[0, 1]` (CSS spec requirement)
-- [ ] Add tests: boundary conditions, known CSS presets (`ease`, `ease-in`, `ease-out`, `ease-in-out`), monotonicity
-- [ ] Add documentation page with interactive bezier curve editor
-- [ ] Export from `index.ts`
+- [x] Implement `makeCubicBezier(x1, y1, x2, y2): EaseFn` using Newton-Raphson or binary search to solve the bezier curve for a given `t`
+- [x] Validate that `x1` and `x2` are clamped to `[0, 1]` (CSS spec requirement)
+- [x] Add tests: boundary conditions, known CSS presets (`ease`, `ease-in`, `ease-out`, `ease-in-out`), monotonicity
+- [x] Add documentation page with interactive bezier curve editor
+- [x] Export from `index.ts`
 
 ## Acceptance Criteria
 
