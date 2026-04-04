@@ -4,6 +4,7 @@ import path from 'node:path'
 export default defineConfig({
   title: 'easefn',
   description: 'A simple easing function library',
+  base: '/easefn/',
 
   vite: {
     resolve: {

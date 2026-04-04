@@ -20,6 +20,17 @@
     --accent-dot: #cc3333;
     --accent-green: #227755;
 
+    /* shared geometry */
+    --border-rule: 1.5px solid var(--paper-line);
+    --radius-sm: 2px;
+    --transition-fast: 0.15s ease;
+
+    /* font-size scale */
+    --fs-nav: 1.2rem;
+    --fs-body: 1.05rem;
+    --fs-small: 0.8rem;
+    --fs-xs: 0.72rem;
+
     /* vitepress overrides */
     --vp-c-bg: var(--paper);
     --vp-c-bg-soft: var(--paper-warm);
@@ -82,7 +93,7 @@
 .VPDoc p,
 .VPDoc li {
     font-family: var(--vp-font-family-base);
-    font-size: 1.05rem;
+    font-size: var(--fs-body);
     line-height: 1.65;
 }
 
@@ -92,13 +103,10 @@
 .VPSidebar {
     font-family: var(--vp-font-family-base) !important;
 }
-.VPSidebarItem div[role="button"] .text {
-    font-size: 1.3rem;
-}
 
 .VPNav .VPNavBarMenuLink {
-    font-size: 1.2rem;
-    transition: color 0.15s ease !important;
+    font-size: var(--fs-nav);
+    transition: color var(--transition-fast) !important;
 }
 .VPNav .VPNavBarMenuLink.active {
     font-weight: bold;
@@ -114,34 +122,22 @@
 .VPSidebar .VPSidebarItem a.link,
 .VPSidebar .VPSidebarItem a.link p.text {
     color: var(--ink) !important;
-    font-size: 1.2rem;
+    font-size: var(--fs-nav);
     transition:
-        color 0.15s ease,
-        padding-left 0.15s ease !important;
+        color var(--transition-fast),
+        padding-left var(--transition-fast) !important;
 }
 
 .VPSidebar h2.text,
 .VPSidebar .VPSidebarItem h2.text {
     color: var(--ink) !important;
-    /*font-size: 1rem !important;*/
+    font-size: 1.3rem;
 }
 
 .VPSidebar a.link:hover,
 .VPSidebar a.link:hover .text {
     color: var(--accent-curve) !important;
     padding-left: 2px !important;
-}
-
-.dark .VPSidebar a.link,
-.dark .VPSidebar a.link .text,
-.dark .VPSidebar a.link p.text,
-.dark .VPSidebar h2.text {
-    color: #ede5d8 !important;
-}
-
-.dark .VPSidebar a.link:hover,
-.dark .VPSidebar a.link:hover .text {
-    color: var(--accent-curve) !important;
 }
 
 /* active sidebar item */
@@ -157,12 +153,6 @@
     font-weight: bold;
 }
 
-.dark .VPSidebar .is-active > .item a.link,
-.dark .VPSidebar .is-active > .item a.link .text,
-.dark .VPSidebar .is-active > .item a.link p.text {
-    color: var(--accent-curve) !important;
-}
-
 /* right sidebar (outline) */
 .VPDocAsideOutline {
     --vp-c-text-1: var(--accent-curve);
@@ -170,7 +160,7 @@
 
 .VPDocAsideOutline .outline-link,
 .VPDocAsideOutline .outline-title {
-    font-size: 1.2rem;
+    font-size: var(--fs-nav);
 }
 .VPDocAsideOutline .outline-link.active {
     font-weight: bold;
@@ -201,19 +191,13 @@
     max-width: 700px;
 }
 
-.VPHomeHero .VPButton.medium {
-    font-size: 1rem;
+.VPHero .actions .VPButton {
+    font-size: var(--fs-nav);
 }
-/*@media (min-width: 640px) {
-    .name[data-v-89d2fc22],
-    .text[data-v-89d2fc22] {
-        max-width: 700px;
-    }
-}*/
 
 .VPFeature .title {
     font-family: var(--vp-font-family-mono) !important;
-    font-size: 1.2rem !important;
+    font-size: var(--fs-nav) !important;
 }
 
 .VPFeature .details {
@@ -229,7 +213,7 @@
 
 .easing-section h3 {
     font-family: var(--vp-font-family-mono);
-    font-size: 0.85rem;
+    font-size: var(--fs-small);
     font-weight: 500;
     margin-bottom: 0.75rem;
     color: var(--ink-light);
@@ -279,8 +263,8 @@
     cursor: pointer;
     position: relative;
     transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease;
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
 }
 
 .play-btn:not(:disabled):hover {
@@ -337,18 +321,18 @@
     align-items: center;
     gap: 0.3rem;
     padding: 0.3rem 0.7rem;
-    border: 1.5px solid var(--paper-line);
+    border: var(--border-rule);
     border-radius: 4px;
     background: none;
     color: var(--ink-faint);
     cursor: pointer;
     font-family: var(--vp-font-family-mono);
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     transition:
-        color 0.15s,
-        border-color 0.15s;
+        color var(--transition-fast),
+        border-color var(--transition-fast);
 }
 
 .reset-btn:hover {
@@ -366,8 +350,8 @@
 /* ── Curve container (graph paper) ── */
 
 .curve-container {
-    border: 1.5px solid var(--paper-line);
-    border-radius: 2px;
+    border: var(--border-rule);
+    border-radius: var(--radius-sm);
     padding: 0;
     background:
         repeating-linear-gradient(
@@ -396,8 +380,8 @@
     position: relative;
     height: 36px;
     background: var(--paper-warm);
-    border: 1.5px solid var(--paper-line);
-    border-radius: 2px;
+    border: var(--border-rule);
+    border-radius: var(--radius-sm);
     overflow: hidden;
 }
 
@@ -408,7 +392,7 @@
     height: 20px;
     border-radius: 50%;
     background: var(--accent-dot);
-    border: 1.5px solid color-mix(in srgb, var(--accent-dot) 70%, black);
+    border: 1.5px solid color-mix(in srgb, var(--accent-dot) 70%, #000);
     transform: translate(-50%, -50%);
     transition: none;
 }
@@ -417,8 +401,8 @@
 
 .color-swatch {
     height: 36px;
-    border-radius: 2px;
-    border: 1.5px solid var(--paper-line);
+    border-radius: var(--radius-sm);
+    border: var(--border-rule);
     transition: none;
 }
 
@@ -433,7 +417,7 @@
 
 .param-slider label {
     font-family: var(--vp-font-family-mono);
-    font-size: 0.78rem;
+    font-size: var(--fs-small);
     min-width: 80px;
     color: var(--ink-light);
 }
@@ -446,7 +430,7 @@
 
 .param-slider .value {
     font-family: var(--vp-font-family-mono);
-    font-size: 0.78rem;
+    font-size: var(--fs-small);
     min-width: 50px;
     text-align: right;
     color: var(--ink-light);
@@ -470,8 +454,8 @@
 
 .params-panel {
     padding: 0.75rem 1rem;
-    border: 1.5px solid var(--paper-line);
-    border-radius: 2px;
+    border: var(--border-rule);
+    border-radius: var(--radius-sm);
     background: var(--paper-warm);
     margin-bottom: 0.75rem;
 }
@@ -479,8 +463,8 @@
 /* ── Code blocks ── */
 
 .VPDoc div[class*="language-"] {
-    border-radius: 2px;
-    border: 1.5px solid var(--paper-line);
+    border-radius: var(--radius-sm);
+    border: var(--border-rule);
 }
 
 /* ── Scrollbar ── */
