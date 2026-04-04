@@ -4,15 +4,15 @@ Spring-like oscillating easing. Adjust amplitude and period to control the sprin
 
 <script setup>
 import FactoryEasingPage from '../components/FactoryEasingPage.vue'
-import { easeInElastic, easeOutElastic, easeInOutElastic } from 'easefn'
+import { makeEaseInElastic, makeEaseOutElastic, makeEaseInOutElastic } from 'easefn'
 
 const snippet = (name) => (p) =>
   `${name}({ amplitude: ${p.amplitude}, period: ${p.period} })`
 
 const variants = [
-  { name: 'easeInElastic', factory: (p) => easeInElastic({ amplitude: p.amplitude, period: p.period }), snippet: snippet('easeInElastic') },
-  { name: 'easeOutElastic', factory: (p) => easeOutElastic({ amplitude: p.amplitude, period: p.period }), snippet: snippet('easeOutElastic') },
-  { name: 'easeInOutElastic', factory: (p) => easeInOutElastic({ amplitude: p.amplitude, period: p.period }), snippet: snippet('easeInOutElastic') },
+  { name: 'makeEaseInElastic', factory: (p) => makeEaseInElastic({ amplitude: p.amplitude, period: p.period }), snippet: snippet('makeEaseInElastic') },
+  { name: 'makeEaseOutElastic', factory: (p) => makeEaseOutElastic({ amplitude: p.amplitude, period: p.period }), snippet: snippet('makeEaseOutElastic') },
+  { name: 'makeEaseInOutElastic', factory: (p) => makeEaseInOutElastic({ amplitude: p.amplitude, period: p.period }), snippet: snippet('makeEaseInOutElastic') },
 ]
 
 const params = [

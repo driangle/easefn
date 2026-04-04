@@ -21,6 +21,12 @@ const allFunctions = [
   "easeOutBounce",
   "easeInBounce",
   "easeInOutBounce",
+  "easeInBack",
+  "easeOutBack",
+  "easeInOutBack",
+  "easeInElastic",
+  "easeOutElastic",
+  "easeInOutElastic",
 ] as const;
 
 const easeInFunctions = allFunctions.filter((n) => n.startsWith("easeIn") && !n.includes("Out"));
@@ -50,7 +56,9 @@ describe("linear", () => {
 describe("monotonicity", () => {
   const samplePoints = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1];
 
-  const monotonic = [...easeInFunctions, ...easeOutFunctions].filter((n) => !n.includes("Bounce"));
+  const monotonic = [...easeInFunctions, ...easeOutFunctions].filter(
+    (n) => !n.includes("Bounce") && !n.includes("Back") && !n.includes("Elastic"),
+  );
   for (const name of monotonic) {
     it(`${name} is monotonically non-decreasing`, () => {
       const values = samplePoints.map((t) => easefn[name](t));
@@ -93,60 +101,60 @@ describe("easeOut curves are above linear at midpoint", () => {
 
 // --- Factory function tests ---
 
-describe("easeInPoly", () => {
+describe("makeEaseInPoly", () => {
   it("n=2 matches easeInQuad", () => {
-    const poly2 = easefn.easeInPoly(2);
+    const poly2 = easefn.makeEaseInPoly(2);
     for (const t of [0, 0.25, 0.5, 0.75, 1]) {
       expect(poly2(t)).toBeCloseTo(easefn.easeInQuad(t));
     }
   });
 
   it("n=3 matches easeInCubic", () => {
-    const poly3 = easefn.easeInPoly(3);
+    const poly3 = easefn.makeEaseInPoly(3);
     for (const t of [0, 0.25, 0.5, 0.75, 1]) {
       expect(poly3(t)).toBeCloseTo(easefn.easeInCubic(t));
     }
   });
 
   it("higher n produces steeper curve", () => {
-    const poly4 = easefn.easeInPoly(4);
-    const poly2 = easefn.easeInPoly(2);
+    const poly4 = easefn.makeEaseInPoly(4);
+    const poly2 = easefn.makeEaseInPoly(2);
     expect(poly4(0.5)).toBeLessThan(poly2(0.5));
   });
 });
 
-describe("easeOutPoly", () => {
+describe("makeEaseOutPoly", () => {
   it("n=2 matches easeOutQuad", () => {
-    const poly2 = easefn.easeOutPoly(2);
+    const poly2 = easefn.makeEaseOutPoly(2);
     for (const t of [0, 0.25, 0.5, 0.75, 1]) {
       expect(poly2(t)).toBeCloseTo(easefn.easeOutQuad(t));
     }
   });
 
   it("boundary conditions", () => {
-    const poly5 = easefn.easeOutPoly(5);
+    const poly5 = easefn.makeEaseOutPoly(5);
     expect(poly5(0)).toBeCloseTo(0);
     expect(poly5(1)).toBeCloseTo(1);
   });
 });
 
-describe("easeInOutPoly", () => {
+describe("makeEaseInOutPoly", () => {
   it("n=2 matches easeInOutQuad", () => {
-    const poly2 = easefn.easeInOutPoly(2);
+    const poly2 = easefn.makeEaseInOutPoly(2);
     for (const t of [0, 0.25, 0.5, 0.75, 1]) {
       expect(poly2(t)).toBeCloseTo(easefn.easeInOutQuad(t));
     }
   });
 
   it("n=3 matches easeInOutCubic", () => {
-    const poly3 = easefn.easeInOutPoly(3);
+    const poly3 = easefn.makeEaseInOutPoly(3);
     for (const t of [0, 0.25, 0.5, 0.75, 1]) {
       expect(poly3(t)).toBeCloseTo(easefn.easeInOutCubic(t));
     }
   });
 
   it("symmetry around t=0.5", () => {
-    const poly4 = easefn.easeInOutPoly(4);
+    const poly4 = easefn.makeEaseInOutPoly(4);
     for (const offset of [0.1, 0.2, 0.3, 0.4]) {
       const sum = poly4(0.5 - offset) + poly4(0.5 + offset);
       expect(sum).toBeCloseTo(1);
@@ -213,47 +221,50 @@ describe("makeEaseInOutExpo", () => {
   });
 });
 
-describe("easeInBack", () => {
-  it("boundary conditions with default overshoot", () => {
-    const fn = easefn.easeInBack();
-    expect(fn(0)).toBeCloseTo(0);
-    expect(fn(1)).toBeCloseTo(1);
+describe("makeEaseInBack", () => {
+  it("default matches easeInBack", () => {
+    const fn = easefn.makeEaseInBack();
+    for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(fn(t)).toBeCloseTo(easefn.easeInBack(t));
+    }
   });
 
   it("goes below 0 (overshoots)", () => {
-    const fn = easefn.easeInBack();
+    const fn = easefn.makeEaseInBack();
     expect(fn(0.2)).toBeLessThan(0);
   });
 
   it("larger overshoot produces more negative values", () => {
-    const small = easefn.easeInBack(1);
-    const large = easefn.easeInBack(3);
+    const small = easefn.makeEaseInBack(1);
+    const large = easefn.makeEaseInBack(3);
     expect(large(0.2)).toBeLessThan(small(0.2));
   });
 });
 
-describe("easeOutBack", () => {
-  it("boundary conditions with default overshoot", () => {
-    const fn = easefn.easeOutBack();
-    expect(fn(0)).toBeCloseTo(0);
-    expect(fn(1)).toBeCloseTo(1);
+describe("makeEaseOutBack", () => {
+  it("default matches easeOutBack", () => {
+    const fn = easefn.makeEaseOutBack();
+    for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(fn(t)).toBeCloseTo(easefn.easeOutBack(t));
+    }
   });
 
   it("goes above 1 (overshoots)", () => {
-    const fn = easefn.easeOutBack();
+    const fn = easefn.makeEaseOutBack();
     expect(fn(0.8)).toBeGreaterThan(1);
   });
 });
 
-describe("easeInOutBack", () => {
-  it("boundary conditions", () => {
-    const fn = easefn.easeInOutBack();
-    expect(fn(0)).toBeCloseTo(0);
-    expect(fn(1)).toBeCloseTo(1);
+describe("makeEaseInOutBack", () => {
+  it("default matches easeInOutBack", () => {
+    const fn = easefn.makeEaseInOutBack();
+    for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(fn(t)).toBeCloseTo(easefn.easeInOutBack(t));
+    }
   });
 
   it("symmetry around t=0.5", () => {
-    const fn = easefn.easeInOutBack();
+    const fn = easefn.makeEaseInOutBack();
     for (const offset of [0.1, 0.2, 0.3, 0.4]) {
       const sum = fn(0.5 - offset) + fn(0.5 + offset);
       expect(sum).toBeCloseTo(1);
@@ -261,57 +272,60 @@ describe("easeInOutBack", () => {
   });
 
   it("custom overshoot changes curve shape", () => {
-    const small = easefn.easeInOutBack(1);
-    const large = easefn.easeInOutBack(3);
+    const small = easefn.makeEaseInOutBack(1);
+    const large = easefn.makeEaseInOutBack(3);
     expect(large(0.2)).not.toBeCloseTo(small(0.2));
   });
 });
 
-describe("easeInElastic", () => {
-  it("boundary conditions with defaults", () => {
-    const fn = easefn.easeInElastic();
-    expect(fn(0)).toBe(0);
-    expect(fn(1)).toBe(1);
+describe("makeEaseInElastic", () => {
+  it("default matches easeInElastic", () => {
+    const fn = easefn.makeEaseInElastic();
+    for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(fn(t)).toBeCloseTo(easefn.easeInElastic(t));
+    }
   });
 
   it("oscillates below 0 near t=1", () => {
-    const fn = easefn.easeInElastic();
+    const fn = easefn.makeEaseInElastic();
     const values = [0.3, 0.4, 0.5, 0.6, 0.7].map((t) => fn(t));
     const hasNegative = values.some((v) => v < 0);
     expect(hasNegative).toBe(true);
   });
 
   it("custom amplitude and period", () => {
-    const fn = easefn.easeInElastic({ amplitude: 1.5, period: 0.4 });
+    const fn = easefn.makeEaseInElastic({ amplitude: 1.5, period: 0.4 });
     expect(fn(0)).toBe(0);
     expect(fn(1)).toBe(1);
   });
 });
 
-describe("easeOutElastic", () => {
-  it("boundary conditions with defaults", () => {
-    const fn = easefn.easeOutElastic();
-    expect(fn(0)).toBe(0);
-    expect(fn(1)).toBe(1);
+describe("makeEaseOutElastic", () => {
+  it("default matches easeOutElastic", () => {
+    const fn = easefn.makeEaseOutElastic();
+    for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(fn(t)).toBeCloseTo(easefn.easeOutElastic(t));
+    }
   });
 
   it("oscillates above 1", () => {
-    const fn = easefn.easeOutElastic();
+    const fn = easefn.makeEaseOutElastic();
     const values = [0.3, 0.4, 0.5, 0.6, 0.7].map((t) => fn(t));
     const hasAboveOne = values.some((v) => v > 1);
     expect(hasAboveOne).toBe(true);
   });
 });
 
-describe("easeInOutElastic", () => {
-  it("boundary conditions with defaults", () => {
-    const fn = easefn.easeInOutElastic();
-    expect(fn(0)).toBe(0);
-    expect(fn(1)).toBe(1);
+describe("makeEaseInOutElastic", () => {
+  it("default matches easeInOutElastic", () => {
+    const fn = easefn.makeEaseInOutElastic();
+    for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(fn(t)).toBeCloseTo(easefn.easeInOutElastic(t));
+    }
   });
 
   it("symmetry around t=0.5", () => {
-    const fn = easefn.easeInOutElastic();
+    const fn = easefn.makeEaseInOutElastic();
     for (const offset of [0.1, 0.2, 0.3, 0.4]) {
       const sum = fn(0.5 - offset) + fn(0.5 + offset);
       expect(sum).toBeCloseTo(1, 5);

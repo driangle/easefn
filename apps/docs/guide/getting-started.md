@@ -42,16 +42,16 @@ function animate(duration: number) {
 Some easings accept parameters to customize their behavior:
 
 ```ts
-import { easeInPoly, easeInBack, easeInElastic } from 'easefn'
+import { makeEaseInPoly, makeEaseInBack, makeEaseInElastic } from 'easefn'
 
 // Polynomial with custom power
-const quartic = easeInPoly(4)
+const quartic = makeEaseInPoly(4)
 
 // Back with custom overshoot
-const gentleBack = easeInBack(1.2)
+const gentleBack = makeEaseInBack(1.2)
 
 // Elastic with custom amplitude and period
-const wobbly = easeInElastic({ amplitude: 1.5, period: 0.4 })
+const wobbly = makeEaseInElastic({ amplitude: 1.5, period: 0.4 })
 ```
 
 ## Type

@@ -12,7 +12,7 @@ This skill guides you through adding a new easing function to the easefn library
 
 Before writing code, determine:
 
-1. **Function type**: Is it a simple `EaseFn` (like `easeInQuad`) or a factory that returns an `EaseFn` (like `easeInBack(overshoot)`)?
+1. **Function type**: Is it a simple `EaseFn` (like `easeInQuad`) or a factory that returns an `EaseFn` (like `makeEaseInBack(overshoot)`)? Factories use the `make*` prefix.
 2. **Variant set**: Easing functions come in triples — easeIn, easeOut, and easeInOut. Always implement all three unless the user specifically asks for just one.
 3. **Parameters** (factory only): What parameters does the factory accept? What are sensible defaults, min/max ranges, and step sizes for UI sliders?
 4. **Category name**: What section does this belong to? (e.g., "Spring", "Steps", "Smooth"). This determines the docs page filename and sidebar entry.
@@ -31,21 +31,24 @@ Add the new function(s) to `ts/src/index.ts`. Follow these patterns:
 export const easeInExample: EaseFn = (t) => /* formula */;
 ```
 
-**Factory function** — export a function that returns an `EaseFn`:
+**Factory function** — export a `make*` function that returns an `EaseFn`, plus a default `EaseFn` export:
 ```ts
 // Single positional param:
-export const easeInExample =
+export const makeEaseInExample =
   (param = DEFAULT): EaseFn =>
   (t) => /* formula using param */;
 
 // Multiple params — use an object:
-export const easeInExample = ({
+export const makeEaseInExample = ({
   paramA = 1,
   paramB = 0.3,
 }: { paramA?: number; paramB?: number } = {}): EaseFn => {
   // Pre-compute constants from params here
   return (t) => /* formula */;
 };
+
+// Default EaseFn with default params (add to allFunctions in tests):
+export const easeInExample: EaseFn = makeEaseInExample();
 ```
 
 **Placement**: Add the new section at the end of the file, before the Bounce section (Bounce is conventionally last). Use a section comment:
@@ -96,18 +99,19 @@ describe("easeInExample", () => {
 });
 ```
 
-**For factory functions** — test boundary conditions, parameter effects, and equivalence with related functions if applicable:
+**For factory functions** — test boundary conditions, parameter effects, default equivalence, and add the default `EaseFn` to `allFunctions`:
 ```ts
-describe("easeInExample", () => {
-  it("boundary conditions with defaults", () => {
-    const fn = easefn.easeInExample();
-    expect(fn(0)).toBeCloseTo(0);
-    expect(fn(1)).toBeCloseTo(1);
+describe("makeEaseInExample", () => {
+  it("default matches easeInExample", () => {
+    const fn = easefn.makeEaseInExample();
+    for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+      expect(fn(t)).toBeCloseTo(easefn.easeInExample(t));
+    }
   });
 
   it("parameter changes curve shape", () => {
-    const gentle = easefn.easeInExample(1);
-    const aggressive = easefn.easeInExample(5);
+    const gentle = easefn.makeEaseInExample(1);
+    const aggressive = easefn.makeEaseInExample(5);
     expect(aggressive(0.5)).not.toBeCloseTo(gentle(0.5));
   });
 });
@@ -159,14 +163,14 @@ Brief description. Explain what the parameters control.
 
 <script setup>
 import FactoryEasingPage from '../components/FactoryEasingPage.vue'
-import { easeInExample, easeOutExample, easeInOutExample } from 'easefn'
+import { makeEaseInExample, makeEaseOutExample, makeEaseInOutExample } from 'easefn'
 
 const snippet = (name) => (p) => `${name}(${p.paramName})`
 
 const variants = [
-  { name: 'easeInExample', factory: (p) => easeInExample(p.paramName), snippet: snippet('easeInExample') },
-  { name: 'easeOutExample', factory: (p) => easeOutExample(p.paramName), snippet: snippet('easeOutExample') },
-  { name: 'easeInOutExample', factory: (p) => easeInOutExample(p.paramName), snippet: snippet('easeInOutExample') },
+  { name: 'makeEaseInExample', factory: (p) => makeEaseInExample(p.paramName), snippet: snippet('makeEaseInExample') },
+  { name: 'makeEaseOutExample', factory: (p) => makeEaseOutExample(p.paramName), snippet: snippet('makeEaseOutExample') },
+  { name: 'makeEaseInOutExample', factory: (p) => makeEaseInOutExample(p.paramName), snippet: snippet('makeEaseInOutExample') },
 ]
 
 const params = [
@@ -198,9 +202,9 @@ e('easeOutExample', easeOutExample, 'example'),
 e('easeInOutExample', easeInOutExample, 'example'),
 ```
 
-For factory functions, call them with default params:
+For factory functions that have a default `EaseFn` export, use it directly (no call needed):
 ```ts
-e('easeInExample', easeInExample(), 'example'),
+e('easeInExample', easeInExample, 'example'),
 ```
 
 This page is a full-width grid showing every easing at a glance, with links to each function's detail section.

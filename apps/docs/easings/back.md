@@ -4,14 +4,14 @@ Easing that overshoots the target and then returns. Adjust the overshoot paramet
 
 <script setup>
 import FactoryEasingPage from '../components/FactoryEasingPage.vue'
-import { easeInBack, easeOutBack, easeInOutBack } from 'easefn'
+import { makeEaseInBack, makeEaseOutBack, makeEaseInOutBack } from 'easefn'
 
 const snippet = (name) => (p) => `${name}(${p.overshoot})`
 
 const variants = [
-  { name: 'easeInBack', factory: (p) => easeInBack(p.overshoot), snippet: snippet('easeInBack') },
-  { name: 'easeOutBack', factory: (p) => easeOutBack(p.overshoot), snippet: snippet('easeOutBack') },
-  { name: 'easeInOutBack', factory: (p) => easeInOutBack(p.overshoot), snippet: snippet('easeInOutBack') },
+  { name: 'makeEaseInBack', factory: (p) => makeEaseInBack(p.overshoot), snippet: snippet('makeEaseInBack') },
+  { name: 'makeEaseOutBack', factory: (p) => makeEaseOutBack(p.overshoot), snippet: snippet('makeEaseOutBack') },
+  { name: 'makeEaseInOutBack', factory: (p) => makeEaseInOutBack(p.overshoot), snippet: snippet('makeEaseInOutBack') },
 ]
 
 const params = [

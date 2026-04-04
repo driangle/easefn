@@ -21,6 +21,7 @@ import {
   easeInBounce, easeOutBounce, easeInOutBounce,
   easeInBack, easeOutBack, easeInOutBack,
   easeInElastic, easeOutElastic, easeInOutElastic,
+
 } from 'easefn'
 
 const e = (name, fn, page) => ({ name, fn, link: withBase(`/easings/${page}#${name}`) })
@@ -45,12 +46,12 @@ const easings = [
   e('easeInBounce', easeInBounce, 'bounce'),
   e('easeOutBounce', easeOutBounce, 'bounce'),
   e('easeInOutBounce', easeInOutBounce, 'bounce'),
-  e('easeInBack', easeInBack(), 'back'),
-  e('easeOutBack', easeOutBack(), 'back'),
-  e('easeInOutBack', easeInOutBack(), 'back'),
-  e('easeInElastic', easeInElastic(), 'elastic'),
-  e('easeOutElastic', easeOutElastic(), 'elastic'),
-  e('easeInOutElastic', easeInOutElastic(), 'elastic'),
+  e('easeInBack', easeInBack, 'back'),
+  e('easeOutBack', easeOutBack, 'back'),
+  e('easeInOutBack', easeInOutBack, 'back'),
+  e('easeInElastic', easeInElastic, 'elastic'),
+  e('easeOutElastic', easeOutElastic, 'elastic'),
+  e('easeInOutElastic', easeInOutElastic, 'elastic'),
 ]
 </script>
 

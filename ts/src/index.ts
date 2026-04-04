@@ -60,17 +60,17 @@ export const easeInOutCirc: EaseFn = (t) =>
 
 // --- Polynomial (configurable power, generalizes Quad/Cubic) ---
 
-export const easeInPoly =
+export const makeEaseInPoly =
   (n: number): EaseFn =>
   (t) =>
     t ** n;
 
-export const easeOutPoly =
+export const makeEaseOutPoly =
   (n: number): EaseFn =>
   (t) =>
     1 - (1 - t) ** n;
 
-export const easeInOutPoly =
+export const makeEaseInOutPoly =
   (n: number): EaseFn =>
   (t) =>
     t < 0.5 ? 2 ** (n - 1) * t ** n : 1 - (-2 * t + 2) ** n / 2;
@@ -101,19 +101,19 @@ export const makeEaseInOutExpo =
 
 const DEFAULT_OVERSHOOT = 1.70158;
 
-export const easeInBack =
+export const makeEaseInBack =
   (overshoot = DEFAULT_OVERSHOOT): EaseFn =>
   (t) =>
     t * t * ((overshoot + 1) * t - overshoot);
 
-export const easeOutBack =
+export const makeEaseOutBack =
   (overshoot = DEFAULT_OVERSHOOT): EaseFn =>
   (t) => {
     t = t - 1;
     return t * t * ((overshoot + 1) * t + overshoot) + 1;
   };
 
-export const easeInOutBack =
+export const makeEaseInOutBack =
   (overshoot = DEFAULT_OVERSHOOT): EaseFn =>
   (t) => {
     const s = overshoot * 1.525;
@@ -124,9 +124,13 @@ export const easeInOutBack =
     return (u * u * ((s + 1) * u + s) + 2) / 2;
   };
 
+export const easeInBack: EaseFn = makeEaseInBack();
+export const easeOutBack: EaseFn = makeEaseOutBack();
+export const easeInOutBack: EaseFn = makeEaseInOutBack();
+
 // --- Elastic (configurable amplitude and period) ---
 
-export const easeInElastic = ({
+export const makeEaseInElastic = ({
   amplitude = 1,
   period = 0.3,
 }: { amplitude?: number; period?: number } = {}): EaseFn => {
@@ -139,7 +143,7 @@ export const easeInElastic = ({
   };
 };
 
-export const easeOutElastic = ({
+export const makeEaseOutElastic = ({
   amplitude = 1,
   period = 0.3,
 }: { amplitude?: number; period?: number } = {}): EaseFn => {
@@ -152,7 +156,7 @@ export const easeOutElastic = ({
   };
 };
 
-export const easeInOutElastic = ({
+export const makeEaseInOutElastic = ({
   amplitude = 1,
   period = 0.45,
 }: { amplitude?: number; period?: number } = {}): EaseFn => {
@@ -167,6 +171,10 @@ export const easeInOutElastic = ({
     return (a * Math.pow(2, -20 * t + 10) * Math.sin(((20 * t - 10 - 2 * s) * Math.PI) / period)) / 2 + 1;
   };
 };
+
+export const easeInElastic: EaseFn = makeEaseInElastic();
+export const easeOutElastic: EaseFn = makeEaseOutElastic();
+export const easeInOutElastic: EaseFn = makeEaseInOutElastic();
 
 // --- Bounce ---
 

@@ -53,25 +53,27 @@ function animate(duration: number) {
 | Exponential | `easeInExpo`, `easeOutExpo`, `easeInOutExpo` |
 | Circular | `easeInCirc`, `easeOutCirc`, `easeInOutCirc` |
 | Bounce | `easeInBounce`, `easeOutBounce`, `easeInOutBounce` |
+| Back | `easeInBack`, `easeOutBack`, `easeInOutBack` |
+| Elastic | `easeInElastic`, `easeOutElastic`, `easeInOutElastic` |
 
 ### Configurable (factory functions)
 
-Factory functions return an `EaseFn`, letting you tune the curve:
+Factory functions (`make*`) return an `EaseFn`, letting you tune the curve:
 
 ```ts
-import { easeInPoly, easeInBack, easeInElastic } from 'easefn'
+import { makeEaseInPoly, makeEaseInBack, makeEaseInElastic } from 'easefn'
 
-const quartic = easeInPoly(4)
-const gentleBack = easeInBack(1.2)
-const wobbly = easeInElastic({ amplitude: 1.5, period: 0.4 })
+const quartic = makeEaseInPoly(4)
+const gentleBack = makeEaseInBack(1.2)
+const wobbly = makeEaseInElastic({ amplitude: 1.5, period: 0.4 })
 ```
 
 | Factory | Parameters | Variants |
 |---------|-----------|----------|
-| `easeInPoly` / `easeOutPoly` / `easeInOutPoly` | `n` (power) | Generalizes quad, cubic, etc. |
+| `makeEaseInPoly` / `makeEaseOutPoly` / `makeEaseInOutPoly` | `n` (power) | Generalizes quad, cubic, etc. |
 | `makeEaseInExpo` / `makeEaseOutExpo` / `makeEaseInOutExpo` | `exponent` | Tunable exponential curve |
-| `easeInBack` / `easeOutBack` / `easeInOutBack` | `overshoot` (default `1.70158`) | Overshoot before settling |
-| `easeInElastic` / `easeOutElastic` / `easeInOutElastic` | `{ amplitude, period }` | Spring-like oscillation |
+| `makeEaseInBack` / `makeEaseOutBack` / `makeEaseInOutBack` | `overshoot` (default `1.70158`) | Overshoot before settling |
+| `makeEaseInElastic` / `makeEaseOutElastic` / `makeEaseInOutElastic` | `{ amplitude, period }` | Spring-like oscillation |
 
 ## Documentation
 
