@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import type { EaseFn } from 'easefn'
 
+const GRID = 20
+
 const props = withDefaults(
   defineProps<{
     easeFn: EaseFn
@@ -10,34 +12,68 @@ const props = withDefaults(
     height?: number
     samples?: number
   }>(),
-  { width: 200, height: 180, samples: 200 },
+  { width: 240, height: 240, samples: 200 },
 )
 
-const padding = { top: 16, right: 12, bottom: 16, left: 16 }
+const padding = { top: GRID, right: GRID, bottom: GRID, left: GRID }
 
 const points = computed(() => {
-  const pts: { x: number; y: number; rawY: number }[] = []
+  const pts: { x: number; y: number }[] = []
   for (let i = 0; i <= props.samples; i++) {
     const t = i / props.samples
-    const v = props.easeFn(t)
-    pts.push({ x: t, y: v, rawY: v })
+    pts.push({ x: t, y: props.easeFn(t) })
   }
   return pts
 })
 
-const yRange = computed(() => {
-  let min = 0
-  let max = 1
-  for (const p of points.value) {
-    if (p.rawY < min) min = p.rawY
-    if (p.rawY > max) max = p.rawY
-  }
-  const pad = (max - min) * 0.1 || 0.1
-  return { min: min - pad, max: max + pad }
-})
-
 const plotW = computed(() => props.width - padding.left - padding.right)
 const plotH = computed(() => props.height - padding.top - padding.bottom)
+
+/**
+ * Compute y-axis range, snapped so that 0 and 1 land on grid lines.
+ *
+ * For standard 0–1 easings this is trivial (min=0, max=1).
+ * For overshoot curves (back, elastic) we pick the finest "unit" size
+ * (pixels per 1.0 of value) that is a multiple of GRID and still fits
+ * the data, then snap max/min so both 0 and 1 align to the grid.
+ */
+const yRange = computed(() => {
+  let rawMin = 0
+  let rawMax = 1
+  for (const p of points.value) {
+    if (p.y < rawMin) rawMin = p.y
+    if (p.y > rawMax) rawMax = p.y
+  }
+
+  if (rawMin >= 0 && rawMax <= 1) return { min: 0, max: 1 }
+
+  const h = plotH.value
+  const rawRange = rawMax - rawMin
+
+  // Find largest unitPx (finest resolution) that is a multiple of GRID,
+  // divides plotH evenly, and whose implied range fits the data.
+  let unitPx = GRID
+  for (let u = h; u >= GRID; u -= GRID) {
+    if (h % u === 0 && h / u >= rawRange) {
+      unitPx = u
+      break
+    }
+  }
+
+  const rangeSize = h / unitPx
+  const k = unitPx / GRID // grid cells per unit of value
+
+  // Snap max up so 0 and 1 both land on grid-aligned Y positions
+  let max = Math.ceil(rawMax * k) / k
+  let min = max - rangeSize
+
+  if (min > rawMin) {
+    min = Math.floor(rawMin * k) / k
+    max = min + rangeSize
+  }
+
+  return { min, max }
+})
 
 function toSvgX(t: number) {
   return padding.left + t * plotW.value
@@ -45,8 +81,7 @@ function toSvgX(t: number) {
 
 function toSvgY(v: number) {
   const { min, max } = yRange.value
-  const norm = (v - min) / (max - min)
-  return padding.top + (1 - norm) * plotH.value
+  return padding.top + ((max - v) / (max - min)) * plotH.value
 }
 
 const polylinePoints = computed(() =>
@@ -59,17 +94,15 @@ const tracerY = computed(() => toSvgY(props.easeFn(props.progress)))
 const zeroY = computed(() => toSvgY(0))
 const oneY = computed(() => toSvgY(1))
 
-/* axis labels */
-const labelX0 = computed(() => padding.left - 2)
-const labelX1 = computed(() => padding.left - 2)
+const labelX = padding.left - 2
 </script>
 
 <template>
   <div class="curve-container">
     <svg :width="width" :height="height" :viewBox="`0 0 ${width} ${height}`">
       <!-- y-axis labels -->
-      <text :x="labelX0" :y="zeroY + 1" text-anchor="end" class="axis-label">0</text>
-      <text :x="labelX1" :y="oneY + 1" text-anchor="end" class="axis-label">1</text>
+      <text :x="labelX" :y="zeroY" text-anchor="end" class="axis-label">0</text>
+      <text :x="labelX" :y="oneY" text-anchor="end" class="axis-label">1</text>
 
       <!-- reference lines -->
       <line
@@ -81,13 +114,13 @@ const labelX1 = computed(() => padding.left - 2)
         class="ref-line"
       />
 
-      <!-- axes -->
+      <!-- axes (anchored to 0 and 1) -->
       <line
-        :x1="padding.left" :y1="padding.top" :x2="padding.left" :y2="padding.top + plotH"
+        :x1="padding.left" :y1="oneY" :x2="padding.left" :y2="zeroY"
         class="axis-line"
       />
       <line
-        :x1="padding.left" :y1="padding.top + plotH" :x2="padding.left + plotW" :y2="padding.top + plotH"
+        :x1="padding.left" :y1="zeroY" :x2="padding.left + plotW" :y2="zeroY"
         class="axis-line"
       />
 

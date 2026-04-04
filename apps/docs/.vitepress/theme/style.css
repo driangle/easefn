@@ -15,7 +15,7 @@
     --paper: #f5f0e8;
     --paper-warm: #ede7db;
     --paper-line: #c8bfb0;
-    --grid: #d4cdc2;
+    --grid: color-mix(in srgb, var(--paper-line) 35%, var(--paper));
     --accent-curve: #2255aa;
     --accent-dot: #cc3333;
     --accent-green: #227755;
@@ -60,7 +60,7 @@
     --paper: #1a1814;
     --paper-warm: #22201a;
     --paper-line: #3a3830;
-    --grid: #2e2c26;
+    --grid: color-mix(in srgb, var(--paper-line) 35%, var(--paper));
     --accent-curve: #7aace8;
     --accent-dot: #e86050;
     --accent-green: #50b888;
@@ -213,7 +213,7 @@
 
 .easing-section h3 {
     font-family: var(--vp-font-family-mono);
-    font-size: var(--fs-small);
+    font-size: var(--fs-body);
     font-weight: 500;
     margin-bottom: 0.75rem;
     color: var(--ink-light);
