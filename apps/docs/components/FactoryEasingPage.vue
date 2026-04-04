@@ -17,7 +17,11 @@ interface ParamDef {
 }
 
 const props = defineProps<{
-  variants: Array<{ name: string; factory: (params: Record<string, number>) => EaseFn }>
+  variants: Array<{
+    name: string
+    factory: (params: Record<string, number>) => EaseFn
+    snippet?: (params: Record<string, number>) => string
+  }>
   params: ParamDef[]
 }>()
 
@@ -40,6 +44,9 @@ const easings = computed(() =>
   props.variants.map((v) => ({
     name: v.name,
     fn: v.factory(currentParams.value),
+    snippet: v.snippet
+      ? `import { ${v.name} } from 'easefn'\n\nconst ease = ${v.snippet(currentParams.value)}`
+      : `import { ${v.name} } from 'easefn'`,
   })),
 )
 </script>
@@ -70,6 +77,7 @@ const easings = computed(() =>
         <MotionDemo :ease-fn="easing.fn" :progress="progress" />
         <div style="height: 0.75rem" />
         <ColorDemo :ease-fn="easing.fn" :progress="progress" />
+        <code class="snippet">{{ easing.snippet }}</code>
       </div>
     </div>
   </div>

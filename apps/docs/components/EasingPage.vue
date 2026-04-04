@@ -23,6 +23,7 @@ const { progress, isPlaying, play, reset } = usePlayback()
         <MotionDemo :ease-fn="easing.fn" :progress="progress" />
         <div style="height: 0.75rem" />
         <ColorDemo :ease-fn="easing.fn" :progress="progress" />
+        <code class="snippet">import { {{ easing.name }} } from 'easefn'</code>
       </div>
     </div>
   </div>

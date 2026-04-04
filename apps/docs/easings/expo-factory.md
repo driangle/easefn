@@ -6,10 +6,12 @@ Configurable exponential easing. Adjust the exponent to control the intensity. T
 import FactoryEasingPage from '../components/FactoryEasingPage.vue'
 import { makeEaseInExpo, makeEaseOutExpo, makeEaseInOutExpo } from 'easefn'
 
+const snippet = (name) => (p) => `${name}(${p.exponent})`
+
 const variants = [
-  { name: 'makeEaseInExpo', factory: (p) => makeEaseInExpo(p.exponent) },
-  { name: 'makeEaseOutExpo', factory: (p) => makeEaseOutExpo(p.exponent) },
-  { name: 'makeEaseInOutExpo', factory: (p) => makeEaseInOutExpo(p.exponent) },
+  { name: 'makeEaseInExpo', factory: (p) => makeEaseInExpo(p.exponent), snippet: snippet('makeEaseInExpo') },
+  { name: 'makeEaseOutExpo', factory: (p) => makeEaseOutExpo(p.exponent), snippet: snippet('makeEaseOutExpo') },
+  { name: 'makeEaseInOutExpo', factory: (p) => makeEaseInOutExpo(p.exponent), snippet: snippet('makeEaseInOutExpo') },
 ]
 
 const params = [

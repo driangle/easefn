@@ -6,10 +6,12 @@ Configurable polynomial easing. Adjust the power to control the curve intensity.
 import FactoryEasingPage from '../components/FactoryEasingPage.vue'
 import { easeInPoly, easeOutPoly, easeInOutPoly } from 'easefn'
 
+const snippet = (name) => (p) => `${name}(${p.power})`
+
 const variants = [
-  { name: 'easeInPoly', factory: (p) => easeInPoly(p.power) },
-  { name: 'easeOutPoly', factory: (p) => easeOutPoly(p.power) },
-  { name: 'easeInOutPoly', factory: (p) => easeInOutPoly(p.power) },
+  { name: 'easeInPoly', factory: (p) => easeInPoly(p.power), snippet: snippet('easeInPoly') },
+  { name: 'easeOutPoly', factory: (p) => easeOutPoly(p.power), snippet: snippet('easeOutPoly') },
+  { name: 'easeInOutPoly', factory: (p) => easeInOutPoly(p.power), snippet: snippet('easeInOutPoly') },
 ]
 
 const params = [
