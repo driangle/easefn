@@ -1,5 +1,12 @@
 # Getting Started
 
+## Bundle Size
+
+| | Size |
+|---|---|
+| Minified | ~2.5 KB |
+| Minified + gzip | ~750 B |
+
 ## Installation
 
 ```bash

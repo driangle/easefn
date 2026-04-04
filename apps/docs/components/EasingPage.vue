@@ -22,7 +22,7 @@ const { progress, isPlaying, play, reset } = usePlayback()
 <template>
   <PlaybackControls :is-playing="isPlaying" @play="play" @reset="reset" />
   <div v-for="easing in easings" :key="easing.name" class="easing-section">
-    <h3>{{ easing.name }}</h3>
+    <h3 :id="easing.name">{{ easing.name }}</h3>
     <div class="demo-row">
       <EasingCurve :ease-fn="easing.fn" :progress="progress" :color="curveColor(easing.name)" />
       <div>

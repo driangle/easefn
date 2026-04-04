@@ -150,7 +150,8 @@ const easings = [
 </ClientOnly>
 ```
 
-**For factory easings** — use `FactoryEasingPage`:
+**For factory easings** — use `FactoryEasingPage`. Each variant needs a `snippet` function that returns the call expression with current param values (this renders a live, copy-pasteable code example below each curve):
+
 ```md
 # Category Name
 
@@ -160,10 +161,12 @@ Brief description. Explain what the parameters control.
 import FactoryEasingPage from '../components/FactoryEasingPage.vue'
 import { easeInExample, easeOutExample, easeInOutExample } from 'easefn'
 
+const snippet = (name) => (p) => `${name}(${p.paramName})`
+
 const variants = [
-  { name: 'easeInExample', factory: (p) => easeInExample(p.paramName) },
-  { name: 'easeOutExample', factory: (p) => easeOutExample(p.paramName) },
-  { name: 'easeInOutExample', factory: (p) => easeInOutExample(p.paramName) },
+  { name: 'easeInExample', factory: (p) => easeInExample(p.paramName), snippet: snippet('easeInExample') },
+  { name: 'easeOutExample', factory: (p) => easeOutExample(p.paramName), snippet: snippet('easeOutExample') },
+  { name: 'easeInOutExample', factory: (p) => easeInOutExample(p.paramName), snippet: snippet('easeInOutExample') },
 ]
 
 const params = [
@@ -176,12 +179,33 @@ const params = [
 </ClientOnly>
 ```
 
-For factories with object params (like Elastic), destructure in the factory callback:
+For factories with **object params** (like Elastic), the snippet should format the object:
 ```ts
-factory: (p) => easeInExample({ amplitude: p.amplitude, period: p.period })
+const snippet = (name) => (p) =>
+  `${name}({ amplitude: ${p.amplitude}, period: ${p.period} })`
 ```
 
-### 4b: Add to the sidebar
+### 4b: Add to the "All Easings" grid
+
+Edit `apps/docs/easings/index.md` and add entries for the new functions to the `easings` array:
+
+1. Add the import at the top
+2. Add entries using the `e()` helper — the third argument is the docs page filename (without extension):
+
+```ts
+e('easeInExample', easeInExample, 'example'),
+e('easeOutExample', easeOutExample, 'example'),
+e('easeInOutExample', easeInOutExample, 'example'),
+```
+
+For factory functions, call them with default params:
+```ts
+e('easeInExample', easeInExample(), 'example'),
+```
+
+This page is a full-width grid showing every easing at a glance, with links to each function's detail section.
+
+### 4c: Add to the sidebar
 
 Edit `apps/docs/.vitepress/config.ts` and add an entry to the appropriate sidebar section:
 - Simple easings go in the **"Easings"** section
@@ -197,7 +221,13 @@ Run the full check to make sure everything works:
 
 ```bash
 cd ts && npm test && npm run build
-cd apps/docs && npm run build
+cd ../apps/docs && npx vitepress build
 ```
 
 All tests must pass, the library must compile, and the docs site must build without errors.
+
+## Notes
+
+- **Curve colors** are automatic — the page components assign colors based on the function name: easeIn variants get `--curve-in` (blue), easeOut gets `--curve-out` (pink), easeInOut gets `--curve-inout` (purple). No manual color assignment needed.
+- **Code snippets** for simple easings are automatic (just the import line). Factory easings need the `snippet` function on each variant to show the parameterized call.
+- **Anchors** — the h3 headings on detail pages have `id` attributes matching the function name, so the All Easings grid links directly to each function (e.g. `/easings/example#easeInExample`).

@@ -12,11 +12,18 @@ const props = withDefaults(
     width?: number
     height?: number
     samples?: number
+    compact?: boolean
   }>(),
-  { width: 240, height: 240, samples: 200, color: 'var(--curve-in)' },
+  { width: 240, height: 240, samples: 200, color: 'var(--curve-in)', compact: false },
 )
 
-const padding = { top: GRID, right: GRID, bottom: GRID, left: GRID }
+const pad = computed(() => props.compact ? 8 : GRID)
+const padding = computed(() => ({
+  top: pad.value,
+  right: pad.value,
+  bottom: pad.value,
+  left: props.compact ? pad.value : GRID,
+}))
 
 const points = computed(() => {
   const pts: { x: number; y: number }[] = []
@@ -27,8 +34,8 @@ const points = computed(() => {
   return pts
 })
 
-const plotW = computed(() => props.width - padding.left - padding.right)
-const plotH = computed(() => props.height - padding.top - padding.bottom)
+const plotW = computed(() => props.width - padding.value.left - padding.value.right)
+const plotH = computed(() => props.height - padding.value.top - padding.value.bottom)
 
 const yRange = computed(() => {
   let rawMin = 0
@@ -66,12 +73,12 @@ const yRange = computed(() => {
 })
 
 function toSvgX(t: number) {
-  return padding.left + t * plotW.value
+  return padding.value.left + t * plotW.value
 }
 
 function toSvgY(v: number) {
   const { min, max } = yRange.value
-  return padding.top + ((max - v) / (max - min)) * plotH.value
+  return padding.value.top + ((max - v) / (max - min)) * plotH.value
 }
 
 const polylinePoints = computed(() =>
@@ -88,9 +95,11 @@ const oneY = computed(() => toSvgY(1))
 <template>
   <div class="curve-container">
     <svg :width="width" :height="height" :viewBox="`0 0 ${width} ${height}`">
-      <!-- y-axis labels -->
-      <text :x="padding.left - 4" :y="zeroY" text-anchor="end" class="axis-label">0</text>
-      <text :x="padding.left - 4" :y="oneY" text-anchor="end" class="axis-label">1</text>
+      <!-- y-axis labels (full mode only) -->
+      <template v-if="!compact">
+        <text :x="padding.left - 4" :y="zeroY" text-anchor="end" class="axis-label">0</text>
+        <text :x="padding.left - 4" :y="oneY" text-anchor="end" class="axis-label">1</text>
+      </template>
 
       <!-- reference lines at 0 and 1 -->
       <line
@@ -107,7 +116,7 @@ const oneY = computed(() => toSvgY(1))
         :points="polylinePoints"
         fill="none"
         :stroke="color"
-        stroke-width="3"
+        :stroke-width="compact ? 2 : 3"
         stroke-linejoin="round"
         stroke-linecap="round"
       />
@@ -117,7 +126,7 @@ const oneY = computed(() => toSvgY(1))
         v-if="progress > 0"
         :cx="tracerX"
         :cy="tracerY"
-        r="5"
+        :r="compact ? 3 : 5"
         :fill="color"
       />
     </svg>

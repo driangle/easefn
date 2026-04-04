@@ -17,7 +17,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
-      { text: 'Easings', link: '/easings/linear' },
+      { text: 'Easings', link: '/easings/' },
     ],
 
     sidebar: [
@@ -28,6 +28,7 @@ export default defineConfig({
       {
         text: 'Easings',
         items: [
+          { text: 'All Easings', link: '/easings/' },
           { text: 'Linear', link: '/easings/linear' },
           { text: 'Quadratic', link: '/easings/quad' },
           { text: 'Cubic', link: '/easings/cubic' },

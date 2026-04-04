@@ -77,7 +77,7 @@ const easings = computed(() =>
   </div>
 
   <div v-for="easing in easings" :key="easing.name" class="easing-section">
-    <h3>{{ easing.name }}</h3>
+    <h3 :id="easing.name">{{ easing.name }}</h3>
     <div class="demo-row">
       <EasingCurve :ease-fn="easing.fn" :progress="progress" :color="easing.color" />
       <div>
