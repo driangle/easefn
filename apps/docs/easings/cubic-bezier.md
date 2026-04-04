@@ -7,7 +7,7 @@ import FactoryEasingPage from '../components/FactoryEasingPage.vue'
 import { makeCubicBezier } from 'easefn'
 
 const snippet = (name) => (p) =>
-  `${name}({ x1: ${p.x1}, y1: ${p.y1}, x2: ${p.x2}, y2: ${p.y2} })`
+  `${name}({\n  x1: ${p.x1},\n  y1: ${p.y1},\n  x2: ${p.x2},\n  y2: ${p.y2},\n})`
 
 const variants = [
   { name: 'makeCubicBezier', factory: (p) => makeCubicBezier({ x1: p.x1, y1: p.y1, x2: p.x2, y2: p.y2 }), snippet: snippet('makeCubicBezier') },

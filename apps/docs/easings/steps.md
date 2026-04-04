@@ -9,7 +9,7 @@ import { makeSteps } from 'easefn'
 const positions = ['jump-end', 'jump-start', 'jump-both', 'jump-none']
 
 const snippet = (name, pos) => (p) =>
-  `${name}({ n: ${Math.round(p.steps)}, position: '${pos}' })`
+  `${name}({\n  n: ${Math.round(p.steps)},\n  position: '${pos}',\n})`
 
 const variants = positions.map((pos) => ({
   name: 'makeSteps',

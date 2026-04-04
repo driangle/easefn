@@ -7,7 +7,7 @@ import FactoryEasingPage from '../components/FactoryEasingPage.vue'
 import { makeEaseInElastic, makeEaseOutElastic, makeEaseInOutElastic } from 'easefn'
 
 const snippet = (name) => (p) =>
-  `${name}({ amplitude: ${p.amplitude}, period: ${p.period} })`
+  `${name}({\n  amplitude: ${p.amplitude},\n  period: ${p.period},\n})`
 
 const variants = [
   { name: 'makeEaseInElastic', factory: (p) => makeEaseInElastic({ amplitude: p.amplitude, period: p.period }), snippet: snippet('makeEaseInElastic') },
