@@ -20,6 +20,15 @@
     --accent-dot: #cc3333;
     --accent-green: #227755;
 
+    /* per-variant curve colors */
+    --curve-in: #7aace8;
+    --curve-out: #e8a0a0;
+    --curve-inout: #b8a0e8;
+
+    /* graph surface */
+    --graph-bg: #2a2520;
+    --graph-grid: rgba(255, 255, 255, 0.06);
+
     /* shared geometry */
     --border-rule: 1.5px solid var(--paper-line);
     --radius-sm: 2px;
@@ -64,6 +73,13 @@
     --accent-curve: #7aace8;
     --accent-dot: #e86050;
     --accent-green: #50b888;
+
+    --curve-in: #7aace8;
+    --curve-out: #e8a0a0;
+    --curve-inout: #b8a0e8;
+
+    --graph-bg: #2a2520;
+    --graph-grid: rgba(255, 255, 255, 0.06);
 
     --vp-c-bg: var(--paper);
     --vp-c-bg-soft: var(--paper-warm);
@@ -359,53 +375,50 @@
     fill: none;
 }
 
-/* ── Curve container (graph paper) ── */
+/* ── Curve container ── */
 
 .curve-container {
-    border: var(--border-rule);
-    border-radius: var(--radius-sm);
+    border: none;
+    border-radius: 8px;
     padding: 0;
     background:
         repeating-linear-gradient(
             0deg,
             transparent,
             transparent 19px,
-            var(--grid) 19px,
-            var(--grid) 20px
+            var(--graph-grid) 19px,
+            var(--graph-grid) 20px
         ),
         repeating-linear-gradient(
             90deg,
             transparent,
             transparent 19px,
-            var(--grid) 19px,
-            var(--grid) 20px
+            var(--graph-grid) 19px,
+            var(--graph-grid) 20px
         ),
-        var(--paper);
+        var(--graph-bg);
     background-size: 20px 20px;
     display: inline-block;
     line-height: 0;
 }
 
-/* ── Motion track ── */
+/* ── Progress bar ── */
 
-.motion-track {
+.progress-bar {
     position: relative;
-    height: 36px;
-    background: var(--paper-warm);
-    border: var(--border-rule);
-    border-radius: var(--radius-sm);
+    height: 8px;
+    background: color-mix(in srgb, var(--curve-color, var(--curve-in)) 20%, transparent);
+    border-radius: 4px;
     overflow: hidden;
 }
 
-.motion-ball {
+.progress-bar-fill {
     position: absolute;
-    top: 50%;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--accent-dot);
-    border: 1.5px solid color-mix(in srgb, var(--accent-dot) 70%, #000);
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 4px;
+    background: var(--curve-color, var(--curve-in));
     transition: none;
 }
 
@@ -413,8 +426,7 @@
 
 .color-swatch {
     height: 36px;
-    border-radius: var(--radius-sm);
-    border: var(--border-rule);
+    border-radius: 6px;
     transition: none;
 }
 

@@ -3,7 +3,7 @@ import { ref, computed, type Ref } from 'vue'
 import type { EaseFn } from 'easefn'
 import { usePlayback } from '../composables/usePlayback'
 import EasingCurve from './EasingCurve.vue'
-import MotionDemo from './MotionDemo.vue'
+import ProgressBar from './ProgressBar.vue'
 import ColorDemo from './ColorDemo.vue'
 import PlaybackControls from './PlaybackControls.vue'
 import ParamSlider from './ParamSlider.vue'
@@ -40,10 +40,17 @@ const currentParams = computed(() => {
   return result
 })
 
+function curveColor(name: string) {
+  if (name.includes('InOut') || name.includes('inOut')) return 'var(--curve-inout)'
+  if (name.includes('Out') || name.includes('out')) return 'var(--curve-out)'
+  return 'var(--curve-in)'
+}
+
 const easings = computed(() =>
   props.variants.map((v) => ({
     name: v.name,
     fn: v.factory(currentParams.value),
+    color: curveColor(v.name),
     snippet: v.snippet
       ? `import { ${v.name} } from 'easefn'\n\nconst ease = ${v.snippet(currentParams.value)}`
       : `import { ${v.name} } from 'easefn'`,
@@ -72,9 +79,9 @@ const easings = computed(() =>
   <div v-for="easing in easings" :key="easing.name" class="easing-section">
     <h3>{{ easing.name }}</h3>
     <div class="demo-row">
-      <EasingCurve :ease-fn="easing.fn" :progress="progress" />
+      <EasingCurve :ease-fn="easing.fn" :progress="progress" :color="easing.color" />
       <div>
-        <MotionDemo :ease-fn="easing.fn" :progress="progress" />
+        <ProgressBar :ease-fn="easing.fn" :progress="progress" :color="easing.color" />
         <div style="height: 0.75rem" />
         <ColorDemo :ease-fn="easing.fn" :progress="progress" />
         <code class="snippet">{{ easing.snippet }}</code>
