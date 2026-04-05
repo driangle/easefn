@@ -21,7 +21,6 @@ Create a single-header C implementation of easefn. Functions take a `double t` i
 - [ ] Add `cubic_bezier` and `steps` factories
 - [ ] Add test suite (using a minimal test framework or raw asserts)
 - [ ] Add usage example
-- [ ] Update root README languages table
 
 ## Acceptance Criteria
 

@@ -22,7 +22,6 @@ Create a Rust implementation of easefn as a `no_std`-compatible crate on crates.
 - [ ] Add unit tests for all easing functions
 - [ ] Add `cubic_bezier` and `steps` factories
 - [ ] Publish to crates.io
-- [ ] Update root README languages table
 
 ## Acceptance Criteria
 

@@ -21,7 +21,6 @@ Create a Swift implementation of easefn as a Swift Package. Each easing function
 - [ ] Add `cubicBezier` and `steps` factories
 - [ ] Add unit tests (XCTest)
 - [ ] Publish as Swift Package
-- [ ] Update root README languages table
 
 ## Acceptance Criteria
 

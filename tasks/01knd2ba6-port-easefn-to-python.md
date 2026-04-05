@@ -22,7 +22,6 @@ Create a Python implementation of easefn as a PyPI package. Each easing function
 - [ ] Add unit tests (pytest)
 - [ ] Add `cubic_bezier` and `steps` factories
 - [ ] Publish to PyPI
-- [ ] Update root README languages table
 
 ## Acceptance Criteria
 

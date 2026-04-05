@@ -21,7 +21,6 @@ Create a C# implementation of easefn as a NuGet package. Each easing function ta
 - [ ] Add `CubicBezier` and `Steps` factories
 - [ ] Add unit tests (xUnit or NUnit)
 - [ ] Publish to NuGet
-- [ ] Update root README languages table
 
 ## Acceptance Criteria
 

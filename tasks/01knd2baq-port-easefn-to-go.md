@@ -21,7 +21,6 @@ Create a Go implementation of easefn as a Go module. Use `func(float64) float64`
 - [ ] Add unit tests
 - [ ] Add `CubicBezier` and `Steps` factories
 - [ ] Publish Go module
-- [ ] Update root README languages table
 
 ## Acceptance Criteria
 
