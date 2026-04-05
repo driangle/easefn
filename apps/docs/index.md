@@ -10,7 +10,7 @@ hero:
       link: /guide/getting-started
     - theme: alt
       text: Browse Easings
-      link: /easings/linear
+      link: /easings/
 features:
   - title: Lightweight
     details: "~2.4 KB minified / ~890 B gzipped. Zero runtime dependencies. Tree-shakeable ESM exports."
